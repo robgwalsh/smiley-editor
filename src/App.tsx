@@ -1,6 +1,7 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
 import './App.css';
+import { MapViewer } from './components/map-viewer/MapViewer';
 import { MainMenu } from './components/menu/MainMenu';
 
 const darkTheme = createTheme({
@@ -19,7 +20,7 @@ function App() {
                 </div>
 
                 <div style={{ flex: 1 }}>
-                    main area
+                    <MapViewer />
                 </div>
 
                 <div style={{ flex: 0 }}>
