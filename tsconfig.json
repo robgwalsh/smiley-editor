@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "removeComments": true,
+        "noEmit": true,
+        "pretty": true,
+        "jsx": "react",
+        "skipLibCheck": true,
+        //"strict": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "sourceMap": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.test.*"]
+  }
