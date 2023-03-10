@@ -2,17 +2,16 @@ import { AppBar, MenuItem, Toolbar } from '@mui/material';
 import React from 'react';
 import { useAppDispatch } from '../../hooks';
 import { SmileyMapLoader } from '../../model/SmileyMapLoader';
-import { setMap } from '../../store/reducers/editor-slice';
-import { HtmlUtils } from '../../utils/HtmlUtils';
+import { loadMap } from '../../store/reducers/editor-slice';
+import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
 
 export function MainMenu() {
 
     const dispatch = useAppDispatch();
 
     const handleLoad = async () => {
-        const fileText: string = await HtmlUtils.promptToLoadTextFile(".smh");
-        const map = SmileyMapLoader.load(fileText);
-        dispatch(setMap(map));
+        const file: TextFile = await HtmlUtils.promptToLoadTextFile(".smh");
+        dispatch(loadMap(file));
     };
 
     const handleSave = () => {

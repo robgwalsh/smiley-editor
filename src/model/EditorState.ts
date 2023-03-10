@@ -1,35 +1,33 @@
-import { LayerState, Layer } from "./Layers";
 import { SmileyMap } from "./SmileyMap";
 import { Viewport } from "./Viewport";
 
 export interface EditorState {
-    map: SmileyMap | null;
+    mapFileName: string;
     activeLayer: LayerState;
     selectedTileIndex: number;
-    layers: Map<Layer, LayerState>;
+    layers: LayerState[];
     viewport: Viewport;
+    cellDiameter: number;
+    revision: number;
 }
 
-export class EditorStateFactory {
-    static initialState() {
-        const initialState: EditorState = {
-            map: null,
-            activeLayer: null,
-            selectedTileIndex: 1,
-            layers: new Map<Layer, LayerState>(),
-            viewport: new Viewport()
-        };
 
-        const mainLayer: LayerState = {
-            type: Layer.Main,
-            index: 0,
-            name: "Main",
-            visible: true
-        };
+/**
+ * The layers in a smiley map. The numeric value is the index of that layer within the save file
+ */
+export enum Layer {
+    Id = 0,
+    Variable = 1,
+    Main = 2,
+    Walk = 3,
+    Item = 4,
+    Enemy = 5,
+}
 
-        initialState.activeLayer = mainLayer;
-        initialState.layers.set(Layer.Main, mainLayer);
-
-        return initialState;
-    }
+export interface LayerState {
+    layer: Layer;
+    name: string;
+    displayIndex: number;
+    visible: boolean;
+    textureName: string;
 }

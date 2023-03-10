@@ -3,10 +3,19 @@ export class SmileyMap {
         public readonly w: number,
         public readonly h: number,
         public readonly idStart: number,
-        public readonly idLayer: Int16Array,
-        public readonly variableLayer: Int16Array,
-        public readonly terrainLayer: Int16Array,
-        public readonly enemyLayer: Int16Array,
-        public readonly eventLayer: Int16Array) {
+        public readonly layers: Int16Array[]) {
+
+        if (layers.length !== 6)
+            throw new Error('there should be 6 layers');
     }
+}
+
+let map: SmileyMap;
+
+export function useMap() {
+    return map;
+}
+
+export function setMap(newMap: SmileyMap) {
+    map = newMap;
 }

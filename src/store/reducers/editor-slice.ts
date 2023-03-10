@@ -1,21 +1,30 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
-import { EditorState, EditorStateFactory } from "../../model/EditorState";
-import { SmileyMap } from "../../model/SmileyMap";
+import { EditorState, Layer, LayerState } from "../../model/EditorState";
+import { EditorStateFactory } from "../../model/EditorStateFactory";
+import { setMap } from "../../model/SmileyMap";
+import { SmileyMapLoader } from "../../model/SmileyMapLoader";
 import { Vector } from "../../model/Vector";
+import { TextFile } from "../../utils/HtmlUtils";
 
 export const editorSlice = createSlice({
     name: "editor",
     initialState: EditorStateFactory.initialState(),
     reducers: {
-        setMap: (state: Draft<EditorState>, action: PayloadAction<SmileyMap>) => {
-            state.map = action.payload;
+        loadMap: (state: Draft<EditorState>, action: PayloadAction<TextFile>) => {
+            // The map is accessed via a singleton because it is too large to store in redux!!
+            setMap(SmileyMapLoader.load(action.payload.contents));
+            state.mapFileName = action.payload.name; // this is mainly just to trigger a state update
         },
         setViewportSize: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
-            state.viewport.size = action.payload;
+            state.viewport.width = action.payload.x;
+            state.viewport.height = action.payload.y;
+        },
+        setActiveLayer: (state: Draft<EditorState>, action: PayloadAction<LayerState>) => {
+            state.activeLayer = action.payload;
         },
     },
 });
 
-export const { setMap, setViewportSize } = editorSlice.actions;
+export const { loadMap, setViewportSize, setActiveLayer } = editorSlice.actions;
 
 export default editorSlice.reducer;

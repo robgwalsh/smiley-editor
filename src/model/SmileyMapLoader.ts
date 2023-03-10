@@ -25,15 +25,26 @@ export class SmileyMapLoader {
         const variableLayer = loader.readLayer(width, height);
 
         loader.readSize();
-        const terrainLayer = loader.readLayer(width, height);
+        const mainLayer = loader.readLayer(width, height); // terrain data
 
         loader.readSize();
-        const environmentLayer = loader.readLayer(width, height);
+        const walkLayer = loader.readLayer(width, height); // collision data
 
         loader.readSize();
-        const eventLayer = loader.readLayer(width, height);
+        const itemLayer = loader.readLayer(width, height);
 
-        return new SmileyMap(width, height, idStart, idLayer, variableLayer, terrainLayer, environmentLayer, eventLayer);
+        loader.readSize();
+        const enemyLayer = loader.readLayer(width, height);
+
+        return new SmileyMap(width, height, idStart,
+            [
+                idLayer,
+                variableLayer,
+                mainLayer,
+                walkLayer,
+                itemLayer,
+                enemyLayer
+            ]);
     }
 
     private readSize(): [number, number] {

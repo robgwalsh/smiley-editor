@@ -22,7 +22,7 @@ function App() {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", flex: 1 }}>
-                    <div style={{ flex: 1, }}>
+                    <div style={{ flex: 1, height: "100%" }}>
                         <MapViewer />
                     </div>
 

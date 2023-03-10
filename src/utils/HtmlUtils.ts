@@ -82,11 +82,14 @@ export class HtmlUtils {
         return await this.readFile(file);
     }
 
-    public static async promptToLoadTextFile(acceptedFormats: string): Promise<string> {
+    public static async promptToLoadTextFile(acceptedFormats: string): Promise<TextFile> {
         return new Promise(async (resolve, reject) => {
             const file = await HtmlUtils.promptUserForFile(acceptedFormats);
             const reader = new FileReader()
-            reader.onload = () => resolve(reader.result as string);
+            reader.onload = () => resolve({
+                name: file.name,
+                contents: reader.result as string
+            });
             reader.onerror = e => reject(e);
             reader.readAsText(file);
         });
@@ -244,4 +247,9 @@ export enum MouseButton {
     Left,
     Middle,
     Right
+}
+
+export interface TextFile {
+    name: string;
+    contents: string;
 }
