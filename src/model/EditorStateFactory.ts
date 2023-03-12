@@ -18,42 +18,42 @@ export class EditorStateFactory {
             layers: [
                 {
                     layer: Layer.Id,
-                    textureName: "event.png", // TODO:
+                    textureName: "enemylayer.PNG", // TODO:
                     displayIndex: 5,
                     name: "Id",
                     visible: true
                 },
                 {
                     layer: Layer.Variable,
-                    textureName: "event.png",
+                    textureName: "enemylayer.PNG", // TODO:
                     displayIndex: 4,
                     name: "Variable",
                     visible: true
                 },
                 {
                     layer: Layer.Main,
-                    textureName: "mainlayer.jpg",
+                    textureName: "mainlayer.png",
                     displayIndex: 0,
                     name: "Main",
                     visible: true
                 },
                 {
                     layer: Layer.Walk,
-                    textureName: "walklayer.jpg",
+                    textureName: "walklayer.PNG",
                     displayIndex: 1,
                     name: "Walk",
                     visible: true
                 },
                 {
                     layer: Layer.Item,
-                    textureName: "itemLayer1.png", // TODO: multiple textures
+                    textureName: "itemlayer1.png", // TODO: multiple textures
                     displayIndex: 2,
                     name: "Item",
                     visible: true
                 },
                 {
                     layer: Layer.Enemy,
-                    textureName: "enemylayer.jpg",
+                    textureName: "enemylayer.PNG",
                     displayIndex: 3,
                     name: "Enemy",
                     visible: true
