@@ -47,6 +47,10 @@ export class SmileyMapLoader {
             ]);
     }
 
+    public peakNext(n: number = 20) {
+        return this._data.substring(this._index, this._index + n);
+    }
+
     private readSize(): [number, number] {
         const width = this.readInt(3);
         this.readInt(1); // space
@@ -64,7 +68,6 @@ export class SmileyMapLoader {
             }
             this.readNewline();
         }
-        this.readNewline();
         return result;
     }
 

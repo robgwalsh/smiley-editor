@@ -16,7 +16,7 @@ function App() {
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <div style={{ width: "100vw", height: "100vh", maxWidth: "100vw", maxHeight: "100vh", display: "flex", flexDirection: "column" }}>
+            <div style={{ width: "100vw", height: "100vh", maxWidth: "100vw", maxHeight: "100vh", display: "flex", flexDirection: "column", overflowX: "hidden", overflowY: "hidden" }}>
                 <div style={{ flex: 0 }}>
                     <MainMenu />
                 </div>
@@ -35,10 +35,6 @@ function App() {
                             <TilePicker />
                         </div>
                     </div>
-                </div>
-
-                <div style={{ flex: 0 }}>
-                    footer
                 </div>
             </div>
         </ThemeProvider>

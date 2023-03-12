@@ -9,8 +9,9 @@ export interface EditorState {
     viewport: Viewport;
     cellDiameter: number;
     revision: number;
+    windowWidth: number;
+    windowHeight: number;
 }
-
 
 /**
  * The layers in a smiley map. The numeric value is the index of that layer within the save file
