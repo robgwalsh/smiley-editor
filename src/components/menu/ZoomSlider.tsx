@@ -32,7 +32,7 @@ export function ZoomSlider() {
         <div style={{ display: "flex", alignItems: "center" }}>
             <Button
                 variant="text"
-                onClick={e => dispatch(setZoom(state.viewport.zoom - step))}
+                onClick={e => dispatch(setZoom(Math.max(min, state.viewport.zoom - step)))}
             >
                 <ZoomOutIcon />
             </Button>
@@ -47,7 +47,7 @@ export function ZoomSlider() {
             </div>
             <Button
                 variant="text"
-                onClick={e => dispatch(setZoom(state.viewport.zoom + step))}
+                onClick={e => dispatch(setZoom(Math.min(max, state.viewport.zoom + step)))}
             >
                 <ZoomInIcon />
             </Button>

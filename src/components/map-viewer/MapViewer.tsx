@@ -39,6 +39,13 @@ export function MapViewer() {
         if (map && canvasRef.current) {
             const cx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
             cx.imageSmoothingEnabled = false;
+            cx.transform(
+                editorState.viewport.zoom,  // x scaling
+                0,                          // x skewing
+                0,                          // y skewing
+                editorState.viewport.zoom,  // y scaling
+                -editorState.viewport.x,    // x offset
+                -editorState.viewport.y);   // y offset
             render(cx, map, editorState);
         }
     });
@@ -67,7 +74,7 @@ function renderLayer(cx: CanvasRenderingContext2D, cells: Vector[], layer: Layer
             const texture = Textures.getTexture(layer, Math.floor(tile / 256));
             const x = v.x * state.cellDiameter - state.viewport.x;
             const y = v.y * state.cellDiameter - state.viewport.y;
-            texture.drawTile(cx, tile, x, y, state.viewport.zoom);
+            texture.drawTile(cx, tile, x, y);
         }
     }
 }

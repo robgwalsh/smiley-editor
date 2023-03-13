@@ -40,8 +40,7 @@ export class Texture {
         cx: CanvasRenderingContext2D,
         tile: number,
         x: number,
-        y: number,
-        zoom: number) {
+        y: number) {
 
         const tileX = (tile % 16) * 64;
         const tileY = Math.round(tile / 16) * 64;
@@ -49,8 +48,8 @@ export class Texture {
         cx.drawImage(this._img,
             tileX, tileY,   // source x, y
             64, 64,         // source width,height
-            Math.round(x * zoom), Math.round(y * zoom),     // destination x, y
-            Math.round(64 * zoom), Math.round(64 * zoom));  // destination width, height
+            x, y,           // destination x, y
+            64, 64);        // destination width, height
     }
 }
 
