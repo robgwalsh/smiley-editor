@@ -82,42 +82,33 @@ export function MapViewer() {
 }
 
 function render(cx: CanvasRenderingContext2D, map: SmileyMap, state: EditorState) {
-
-    const cells: Vector[] = getVisibleCells(state.viewport, state.cellDiameter);
-
-    renderLayer(cx, cells, Layer.Main, map, state);
-    renderLayer(cx, cells, Layer.Walk, map, state);
-    renderLayer(cx, cells, Layer.Item, map, state);
+    renderLayer(cx, Layer.Main, map, state);
+    renderLayer(cx, Layer.Walk, map, state);
+    renderLayer(cx, Layer.Item, map, state);
     //renderLayer(cx, cells, Layer.Enemy, map, state);
 }
 
-function renderLayer(cx: CanvasRenderingContext2D, cells: Vector[], layer: Layer, map: SmileyMap, state: EditorState) {
-    for (const v of cells) {
-        const tile = map.layers[layer][v.y * map.w + v.x];
-        if (tile >= 0) {
-            const texture = Textures.getTexture(layer, Math.floor(tile / 256));
-            const x = v.x * state.cellDiameter - state.viewport.x;
-            const y = v.y * state.cellDiameter - state.viewport.y;
-            texture.drawTile(cx, tile, x, y);
-        }
-    }
-}
+function renderLayer(cx: CanvasRenderingContext2D, layer: Layer, map: SmileyMap, state: EditorState) {
 
-function getVisibleCells(viewport: Viewport, cellDiameter: number): Vector[] {
-    const cells: Vector[] = [];
+    if (state.viewport.width <= 0 || state.viewport.height <= 0)
+        return;
 
-    if (viewport.width <= 0 || viewport.height <= 0)
-        return cells;
+    const vp = state.viewport;
 
-    const leftTile = Math.round(viewport.x / viewport.zoom / cellDiameter);
-    const rightTile = Math.round((viewport.x + viewport.width) / viewport.zoom / cellDiameter);
-    const topTile = Math.round(viewport.y / viewport.zoom / cellDiameter);
-    const bottomTile = Math.round((viewport.y + viewport.height) / viewport.zoom / cellDiameter);
+    const leftTile = Math.round(vp.x / vp.zoom / state.cellDiameter);
+    const rightTile = Math.round((vp.x + vp.width) / vp.zoom / state.cellDiameter);
+    const topTile = Math.round(vp.y / vp.zoom / state.cellDiameter);
+    const bottomTile = Math.round((vp.y + vp.height) / vp.zoom / state.cellDiameter);
 
     for (let x = leftTile; x <= rightTile; x++) {
         for (let y = topTile; y <= bottomTile; y++) {
-            cells.push(new Vector(x, y));
+            const tile = map.layers[layer][y * map.w + x];
+            if (tile >= 0) {
+                const texture = Textures.getTexture(layer, Math.floor(tile / 256));
+                texture.drawTile(cx, tile,
+                    x * state.cellDiameter - vp.x,
+                    y * state.cellDiameter - vp.y);
+            }
         }
     }
-    return cells;
 }
