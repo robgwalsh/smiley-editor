@@ -1,20 +1,21 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import { useWheelZoom } from "../../hooks/useWheelZoom";
 import { EditorState, Layer } from "../../model/EditorState";
 import { SmileyMap, useMap } from "../../model/SmileyMap";
 import { Textures } from "../../model/Textures";
 import { Vector } from "../../model/Vector";
 import { Viewport } from "../../model/Viewport";
-import { setViewportSize } from "../../store/reducers/editor-slice";
+import { setMouseOnMap, setMousePosition, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/reducers/editor-slice";
 
 export function MapViewer() {
 
-    const editorState = useAppSelector<EditorState>(state => state.editor);
+    const state = useAppSelector<EditorState>(state => state.editor);
     const map = useMap();
     const dispatch = useAppDispatch();
 
-    const containerRef = useRef(null);
-    const canvasRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Synchronize the canvas size to available size
     if (containerRef.current && canvasRef.current) {
@@ -22,7 +23,7 @@ export function MapViewer() {
         const height = (containerRef.current as any).clientHeight;
         if (canvasRef.current.width !== width)
             canvasRef.current.width = width;
-        if (canvasRef.current.height !== editorState.viewport.height)
+        if (canvasRef.current.height !== state.viewport.height)
             canvasRef.current.height = height;
     }
 
@@ -35,24 +36,47 @@ export function MapViewer() {
         return () => observer.disconnect();
     }, []);
 
+    useWheelZoom((e: WheelEvent) => {
+        if (e.deltaY !== 0 || e.deltaX !== 0) {
+            dispatch(zoomAtCursor(e.deltaY < 0 || e.deltaX < 0));
+        }
+    });
+
+    const handleMouseMove = (e) => {
+        const box: DOMRect = containerRef.current.getBoundingClientRect();
+        dispatch(setMousePosition(new Vector(
+            e.clientX - box.left,
+            e.clientY - box.top
+        )));
+    };
+
     useEffect(() => {
         if (map && canvasRef.current) {
             const cx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
             cx.imageSmoothingEnabled = false;
             cx.transform(
-                editorState.viewport.zoom,  // x scaling
-                0,                          // x skewing
-                0,                          // y skewing
-                editorState.viewport.zoom,  // y scaling
-                -editorState.viewport.x,    // x offset
-                -editorState.viewport.y);   // y offset
-            render(cx, map, editorState);
+                state.viewport.zoom,  // x scaling
+                0,                    // x skewing
+                0,                    // y skewing
+                state.viewport.zoom,  // y scaling
+                -state.viewport.x,    // x offset
+                -state.viewport.y);   // y offset
+            render(cx, map, state);
         }
     });
 
     return (
-        <div style={{ position: "relative", overflow: "hidden", height: "100%" }} ref={containerRef}>
-            <canvas style={{ position: "absolute", left: 0, top: 0 }} ref={canvasRef}></canvas>
+        <div
+            style={{ position: "relative", overflow: "hidden", height: "100%" }}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={(e) => dispatch(setMouseOnMap(true))}
+            onMouseLeave={(e) => dispatch(setMouseOnMap(false))}
+            ref={containerRef}
+        >
+            <canvas
+                style={{ position: "absolute", left: 0, top: 0 }}
+                ref={canvasRef}>
+            </canvas>
         </div>
     )
 }

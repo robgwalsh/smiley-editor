@@ -1,4 +1,4 @@
-import { Button, Input, Slider } from "@mui/material";
+import { Button, Input, MenuItem, Slider } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
@@ -30,14 +30,15 @@ export function ZoomSlider() {
 
     return (
         <div style={{ display: "flex", alignItems: "center" }}>
-            <Button
-                variant="text"
+            <MenuItem
+                style={{ padding: "5px", borderRadius: "5px", marginRight: "5px" }}
                 onClick={e => dispatch(setZoom(Math.max(min, state.viewport.zoom - step)))}
             >
                 <ZoomOutIcon />
-            </Button>
+            </MenuItem>
             <div style={{ width: "250px" }}>
                 <Slider
+                    style={{ marginTop: "5px" }}
                     value={state.viewport.zoom}
                     onChange={(e, newValue: number) => dispatch(setZoom(newValue))}
                     min={min}
@@ -45,12 +46,12 @@ export function ZoomSlider() {
                     step={step}
                 />
             </div>
-            <Button
-                variant="text"
+            <MenuItem
+                style={{ padding: "5px", marginLeft: "15px", borderRadius: "5px" }}
                 onClick={e => dispatch(setZoom(Math.min(max, state.viewport.zoom + step)))}
             >
                 <ZoomInIcon />
-            </Button>
+            </MenuItem>
             <div style={{ width: "50px" }}>
                 <Input
                     value={state.viewport.zoom}
