@@ -20,7 +20,6 @@ export function MapViewer() {
     if (containerRef.current && canvasRef.current) {
         const width = (containerRef.current as any).clientWidth;
         const height = (containerRef.current as any).clientHeight;
-        //console.log(`${width}x${height} canvas: ${canvasRef.current.width}x${canvasRef.current.height}`);
         if (canvasRef.current.width !== width)
             canvasRef.current.width = width;
         if (canvasRef.current.height !== editorState.viewport.height)
@@ -29,15 +28,18 @@ export function MapViewer() {
 
     // Listen to size changes
     useLayoutEffect(() => {
-        const resizeListener = () => dispatch(setViewportSize(new Vector(window.innerWidth, window.innerHeight)));
-        resizeListener();
-        window.addEventListener('resize', resizeListener);
-        return () => window.removeEventListener('resize', resizeListener);
+        const observer = new ResizeObserver((entries) => {
+            dispatch(setViewportSize(new Vector(entries[0].contentRect.width, entries[0].contentRect.height)));
+        });
+        observer.observe(containerRef.current);
+        return () => observer.disconnect();
     }, []);
 
     useEffect(() => {
         if (map && canvasRef.current) {
-            render(canvasRef.current.getContext('2d'), map, editorState);
+            const cx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
+            cx.imageSmoothingEnabled = false;
+            render(cx, map, editorState);
         }
     });
 
@@ -76,10 +78,10 @@ function getVisibleCells(viewport: Viewport, cellDiameter: number): Vector[] {
     if (viewport.width <= 0 || viewport.height <= 0)
         return cells;
 
-    const leftTile = Math.round(viewport.x / cellDiameter);
-    const rightTile = Math.round((viewport.x + viewport.width) / cellDiameter);
-    const topTile = Math.round(viewport.y / cellDiameter);
-    const bottomTile = Math.round((viewport.y + viewport.height) / cellDiameter);
+    const leftTile = Math.round(viewport.x / viewport.zoom / cellDiameter);
+    const rightTile = Math.round((viewport.x + viewport.width) / viewport.zoom / cellDiameter);
+    const topTile = Math.round(viewport.y / viewport.zoom / cellDiameter);
+    const bottomTile = Math.round((viewport.y + viewport.height) / viewport.zoom / cellDiameter);
 
     for (let x = leftTile; x <= rightTile; x++) {
         for (let y = topTile; y <= bottomTile; y++) {

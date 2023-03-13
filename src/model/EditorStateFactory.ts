@@ -8,8 +8,6 @@ export class EditorStateFactory {
             selectedTileIndex: 1,
             revision: 0,
             cellDiameter: 64,
-            windowHeight: 0,
-            windowWidth: 0,
             viewport: {
                 x: 0,
                 y: 0,

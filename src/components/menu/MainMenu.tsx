@@ -4,6 +4,7 @@ import { useAppDispatch } from '../../hooks';
 import { SmileyMapLoader } from '../../model/SmileyMapLoader';
 import { loadMap } from '../../store/reducers/editor-slice';
 import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
+import { ZoomSlider } from './ZoomSlider';
 
 export function MainMenu() {
 
@@ -27,6 +28,8 @@ export function MainMenu() {
                         <MenuItem onClick={handleLoad}>Load</MenuItem>
                         <MenuItem onClick={handleSave}>Save</MenuItem>
                     </div>
+
+                    <ZoomSlider></ZoomSlider>
                 </Toolbar>
             </AppBar>
         </div>

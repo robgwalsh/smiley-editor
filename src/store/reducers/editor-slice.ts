@@ -22,9 +22,12 @@ export const editorSlice = createSlice({
         setActiveLayer: (state: Draft<EditorState>, action: PayloadAction<LayerState>) => {
             state.activeLayer = action.payload;
         },
+        setZoom: (state: Draft<EditorState>, action: PayloadAction<number>) => {
+            state.viewport.zoom = action.payload;
+        }
     },
 });
 
-export const { loadMap, setViewportSize, setActiveLayer } = editorSlice.actions;
+export const { loadMap, setViewportSize, setActiveLayer, setZoom } = editorSlice.actions;
 
 export default editorSlice.reducer;

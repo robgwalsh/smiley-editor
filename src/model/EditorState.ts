@@ -9,8 +9,6 @@ export interface EditorState {
     viewport: Viewport;
     cellDiameter: number;
     revision: number;
-    windowWidth: number;
-    windowHeight: number;
 }
 
 /**
