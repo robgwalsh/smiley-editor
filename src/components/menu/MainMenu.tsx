@@ -4,6 +4,7 @@ import { useAppDispatch } from '../../hooks';
 import { SmileyMapLoader } from '../../model/SmileyMapLoader';
 import { loadMap } from '../../store/reducers/editor-slice';
 import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
+import { LayerPicker } from '../layers/LayerPicker';
 import { ZoomSlider } from './ZoomSlider';
 
 export function MainMenu() {
@@ -22,16 +23,14 @@ export function MainMenu() {
     return (
         <div style={{ display: "flex" }}>
 
-            <AppBar position="static">
-                <Toolbar>
-                    <div style={{ display: "flex" }}>
-                        <MenuItem onClick={handleLoad}>Load</MenuItem>
-                        <MenuItem onClick={handleSave}>Save</MenuItem>
-                    </div>
+            <MenuItem onClick={handleLoad}>Load</MenuItem>
+            <MenuItem onClick={handleSave}>Save</MenuItem>
 
-                    <ZoomSlider></ZoomSlider>
-                </Toolbar>
-            </AppBar>
+            <ZoomSlider></ZoomSlider>
+
+            <div style={{ flex: 1 }}></div>
+
+            <LayerPicker />
         </div>
     );
 }

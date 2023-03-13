@@ -22,12 +22,12 @@ export function Footer() {
             height: "30px",
             gap: "25px"
         }}>
-            <label style={labelStyle}>viewport: {Math.round(state.viewport.x)}, {Math.round(state.viewport.y)}</label>
+            <label style={{...labelStyle, width: "140px" }}>viewport: {Math.round(state.viewport.x)}, {Math.round(state.viewport.y)}</label>
             <label style={labelStyle}>{Math.round(state.viewport.width)}x{Math.round(state.viewport.height)}</label>
 
 
-            <label style={labelStyle}>mouse: {state.mouseX}, {state.mouseY}</label>
-            <label style={labelStyle}>cell: {mouseCellX}, {mouseCellY}</label>
+            <label style={{...labelStyle, width: "140px" }}>mouse: {Math.round(state.mouseX)}, {Math.round(state.mouseY)}</label>
+            <label style={{...labelStyle, width: "140px" }}>cell: {mouseCellX}, {mouseCellY}</label>
         </div>
     )
 }
