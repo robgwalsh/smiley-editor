@@ -16,6 +16,8 @@ const darkTheme = createTheme({
     },
 });
 
+const padding = "20px";
+
 function App() {
     const state = useAppSelector(state => state.editor);
     const map = useMap();
@@ -28,28 +30,29 @@ function App() {
                 height: "100vh",
                 maxWidth: "100vw",
                 maxHeight: "100vh",
+                backgroundColor: "#121212",
                 display: "flex",
                 flexDirection: "column",
                 overflowX: "hidden",
                 overflowY: "hidden"
             }}>
-                <div style={{ flex: 0 }}>
+                <div style={{ flex: 0, marginLeft: padding, marginRight: padding }}>
                     <MainMenu />
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", flex: 1 }}>
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", flex: 1, margin: `0 ${padding} 0 ${padding}` }}>
                     <div style={{ flex: 1, height: "100%" }}>
                         {map ? <MapViewer /> : <Welcome />}
                     </div>
 
-                    <div style={{ flex: 0, display: "flex", flexDirection: "column" }}>
+                    <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding }}>
                         <div style={{ flex: 1 }}>
                             <TilePicker />
                         </div>
                     </div>
                 </div>
 
-                <div style={{ flex: 0 }}>
+                <div style={{ flex: 0, marginLeft: padding }}>
                     <Footer />
                 </div>
             </div>

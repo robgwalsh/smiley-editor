@@ -23,6 +23,7 @@ export function LayerPicker() {
         <ToggleButtonGroup
             color="primary"
             value={activeLayer.name}
+            style={{ height: "30px" }}
             exclusive
             onChange={handleSelection}
             aria-label="Platform"

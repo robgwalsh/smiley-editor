@@ -10,16 +10,6 @@ export function TilePicker() {
 
     const hasTexture = activeLayer.layer !== Layer.Id && activeLayer.layer !== Layer.Variable;
 
-    // if (!hasTexture) {
-    //     return (
-    //         <div style={{ width: "500px", height: "500px", border: ".5px solid #efefef" }}>
-    //             {activeLayer.layer} - no texture!
-    //         </div>
-    //     )
-    // }
-
-    //const textureUrl = ;
-
     return (
         <div>
             {hasTexture

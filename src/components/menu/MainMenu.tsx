@@ -21,7 +21,7 @@ export function MainMenu() {
     };
 
     return (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", alignItems: "center", height: "50px" }}>
 
             <MenuItem onClick={handleLoad}>Load</MenuItem>
             <MenuItem onClick={handleSave}>Save</MenuItem>
@@ -30,7 +30,9 @@ export function MainMenu() {
 
             <div style={{ flex: 1 }}></div>
 
-            <LayerPicker />
+            <div style={{ width: "500px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <LayerPicker />
+            </div>
         </div>
     );
 }

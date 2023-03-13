@@ -10,7 +10,8 @@ export function Footer() {
     const mouseCellY = Math.floor((state.mouseY - state.viewport.y) / state.viewport.zoom / state.cellDiameter);
 
     const labelStyle = {
-        fontWeight: 600
+        fontWeight: 400,
+        color: "#dfdfdf"
     };
 
     return (
@@ -18,8 +19,8 @@ export function Footer() {
             display: "flex",
             alignItems: "center",
             backgroundColor: "#121212",
-            padding: "10px",
-            height: "30px",
+            padding: "15px 15px 15px 0",
+            height: "35px",
             gap: "25px"
         }}>
             <label style={{...labelStyle, width: "140px" }}>viewport: {Math.round(state.viewport.x)}, {Math.round(state.viewport.y)}</label>
