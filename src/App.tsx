@@ -1,8 +1,6 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
-import './App.css';
 import { Footer } from './components/Footer';
-import { LayerPicker } from './components/layers/LayerPicker';
 import { TilePicker } from './components/layers/TilePicker';
 import { MapViewer } from './components/map-viewer/MapViewer';
 import { MainMenu } from './components/menu/MainMenu';
@@ -41,7 +39,7 @@ function App() {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", flex: 1, margin: `0 ${padding} 0 ${padding}` }}>
-                    <div style={{ flex: 1, height: "100%" }}>
+                    <div style={{ flex: 1, height: "100%", backgroundColor: "#191919", borderRadius: "6px" }}>
                         {map ? <MapViewer /> : <Welcome />}
                     </div>
 
