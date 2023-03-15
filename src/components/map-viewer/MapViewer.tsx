@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useWheelZoom } from "../../hooks/useWheelZoom";
 import { EditorState, Layer } from "../../model/EditorState";
-import { SmileyMap, useMap } from "../../model/SmileyMap";
+import { SmileyMap, useMap } from "../../model/map/SmileyMap";
 import { Textures } from "../../model/Textures";
 import { Vector } from "../../model/Vector";
 import { setMouseOnMap, setMousePosition, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/reducers/editor-slice";
@@ -104,13 +104,13 @@ function renderLayer(cx: CanvasRenderingContext2D, layer: Layer, map: SmileyMap,
 
     for (let x = leftTile; x <= rightTile; x++) {
         for (let y = topTile; y <= bottomTile; y++) {
-            const tile = map.layers[layer][y * map.w + x];
-            if (tile > 1) {
-                const texture = Textures.getTexture(layer, Math.floor(tile / 256));
-                texture.drawTile(cx, tile,
-                    x * state.cellDiameter - vp.x,
-                    y * state.cellDiameter - vp.y);
-            }
+            //const tile = map.visualLayers .layers[layer][y * map.w + x];
+            // if (tile > 1) {
+            //     const texture = Textures.getTexture(layer, Math.floor(tile / 256));
+            //     texture.drawTile(cx, tile,
+            //         x * state.cellDiameter - vp.x,
+            //         y * state.cellDiameter - vp.y);
+            // }
         }
     }
 }

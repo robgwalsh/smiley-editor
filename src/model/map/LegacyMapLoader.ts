@@ -1,6 +1,7 @@
-import { SmileyMap } from "./SmileyMap";
+import { VisualLayerType } from "./MapFile";
+import { MapLayer, SmileyMap, VisualMapLayer } from "./SmileyMap";
 
-export class SmileyMapLoader {
+export class LegacyMapLoader {
 
     private _index = 0;
 
@@ -11,7 +12,7 @@ export class SmileyMapLoader {
 
         // from Environment::loadArea, https://github.com/robgwalsh/smileysmazehunt/blob/main/src/environment.cpp
 
-        const loader = new SmileyMapLoader(data);
+        const loader = new LegacyMapLoader(data);
 
         // First line is the evnt id offset for this area
         const idStart = loader.readInt(1);
@@ -36,15 +37,19 @@ export class SmileyMapLoader {
         loader.readSize();
         const enemyLayer = loader.readLayer(width, height);
 
-        return new SmileyMap(width, height, idStart,
-            [
-                idLayer,
-                variableLayer,
-                mainLayer,
-                walkLayer,
-                itemLayer,
-                enemyLayer
-            ]);
+        return new SmileyMap(
+            {
+                width,
+                height,
+                idStart,
+                song: "TODO:"
+            },
+            new MapLayer(idLayer),
+            new MapLayer(variableLayer),
+            new MapLayer(walkLayer),
+            new MapLayer(itemLayer),
+            new MapLayer(enemyLayer),
+            [new VisualMapLayer(mainLayer, 0, VisualLayerType.Legacy)]);
     }
 
     public peakNext(n: number = 20) {

@@ -1,4 +1,4 @@
-import { SmileyMap } from "./SmileyMap";
+import { SmileyMap } from "./map/SmileyMap";
 import { Viewport } from "./Viewport";
 
 export interface EditorState {

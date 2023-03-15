@@ -6,7 +6,7 @@ import { MapViewer } from './components/map-viewer/MapViewer';
 import { MainMenu } from './components/menu/MainMenu';
 import { Welcome } from './components/Welcome';
 import { useAppSelector } from './hooks';
-import { useMap } from './model/SmileyMap';
+import { useMap } from './model/map/SmileyMap';
 
 const darkTheme = createTheme({
     palette: {

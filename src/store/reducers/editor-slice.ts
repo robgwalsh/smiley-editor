@@ -1,9 +1,10 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { EditorState, initialEditorState, LayerState } from "../../model/EditorState";
-import { setMap } from "../../model/SmileyMap";
-import { SmileyMapLoader } from "../../model/SmileyMapLoader";
+import { setMap } from "../../model/map/SmileyMap";
+import { LegacyMapLoader } from "../../model/map/LegacyMapLoader";
 import { Vector } from "../../model/Vector";
 import { TextFile } from "../../utils/HtmlUtils";
+import { MapFile } from "../../model/map/MapFile";
 
 export const editorSlice = createSlice({
     name: "editor",
@@ -11,7 +12,7 @@ export const editorSlice = createSlice({
     reducers: {
         loadMap: (state: Draft<EditorState>, action: PayloadAction<TextFile>) => {
             // The map is accessed via a singleton because it is too large to store in redux!!
-            setMap(SmileyMapLoader.load(action.payload.contents));
+            setMap(LegacyMapLoader.load(action.payload.contents));
             state.mapFileName = action.payload.name; // this is mainly just to trigger a state update
         },
         setViewportSize: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
