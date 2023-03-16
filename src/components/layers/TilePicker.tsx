@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../hooks";
-import { EditorState, Layer } from "../../model/EditorState";
+import { EditorState, LayerType } from "../../model/EditorState";
 import { Textures } from "../../model/Textures";
 
 export function TilePicker() {
@@ -8,7 +8,7 @@ export function TilePicker() {
     const { activeLayer, selectedTileIndex } = useAppSelector<EditorState>(state => state.editor);
     const [textureIndex, setTextureIndex] = useState<number>(0);
 
-    const hasTexture = activeLayer.layer !== Layer.Id && activeLayer.layer !== Layer.Variable;
+    const hasTexture = activeLayer.layer !== LayerType.Id && activeLayer.layer !== LayerType.Variable;
 
     return (
         <div>

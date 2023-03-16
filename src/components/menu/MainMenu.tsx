@@ -1,8 +1,9 @@
-import { AppBar, MenuItem, Toolbar } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import React from 'react';
-import { useAppDispatch } from '../../hooks';
-import { LegacyMapLoader } from '../../model/map/LegacyMapLoader';
-import { useMap } from '../../model/map/SmileyMap';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { EditorState } from '../../model/EditorState';
+import { convertMapStateToFile } from '../../model/map/converters';
+import { useMapData } from '../../model/map/MapData';
 import { loadMap } from '../../store/reducers/editor-slice';
 import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
 import { LayerPicker } from '../layers/LayerPicker';
@@ -10,23 +11,22 @@ import { ZoomSlider } from './ZoomSlider';
 
 export function MainMenu() {
 
+    const state: EditorState = useAppSelector(state => state.editor);
     const dispatch = useAppDispatch();
-    const map = useMap();
+    const mapData = useMapData();
 
     const handleLoad = async () => {
-
-        await (window as any).showOpenFilePicker();
-
-        // const file: TextFile = await HtmlUtils.promptToLoadTextFile(".smh");
-        // dispatch(loadMap(file));
+        const file: TextFile = await HtmlUtils.promptToLoadTextFile(".smh");
+        dispatch(loadMap(file));
     };
 
     const handleSave = async () => {
-        if (!map)
+        if (!state.map)
             return;
         const file: File = await HtmlUtils.promptUserForFile(".smh");
         if (file) {
-            const json = JSON.stringify(map.toMapFile());
+            const mapFile = convertMapStateToFile(state.map, mapData);
+            const json = JSON.stringify(mapFile);
             await HtmlUtils.downloadTextAsFile(json, file.name);
         }
     };

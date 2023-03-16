@@ -1,16 +1,15 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useWheelZoom } from "../../hooks/useWheelZoom";
-import { EditorState, Layer } from "../../model/EditorState";
-import { SmileyMap, useMap } from "../../model/map/SmileyMap";
-import { Textures } from "../../model/Textures";
+import { EditorState } from "../../model/EditorState";
+import { MapData, useMapData } from "../../model/map/MapData";
+import { LayerState } from "../../model/map/MapState";
 import { Vector } from "../../model/Vector";
 import { setMouseOnMap, setMousePosition, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/reducers/editor-slice";
 
 export function MapViewer() {
-
-    const state = useAppSelector<EditorState>(state => state.editor);
-    const map = useMap();
+    const state: EditorState = useAppSelector(state => state.editor);
+    const mapData: MapData = useMapData();
     const dispatch = useAppDispatch();
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -50,7 +49,7 @@ export function MapViewer() {
     };
 
     useEffect(() => {
-        if (map && canvasRef.current) {
+        if (state.map && canvasRef.current) {
             const cx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
             cx.imageSmoothingEnabled = false;
             cx.transform(
@@ -60,7 +59,7 @@ export function MapViewer() {
                 state.viewport.zoom,  // y scaling
                 -state.viewport.x,    // x offset
                 -state.viewport.y);   // y offset
-            render(cx, map, state);
+            render(cx, state.map, state);
         }
     });
 
@@ -80,17 +79,20 @@ export function MapViewer() {
     )
 }
 
-function render(cx: CanvasRenderingContext2D, map: SmileyMap, state: EditorState) {
+function render(cx: CanvasRenderingContext2D, state: EditorState, mapData: MapData) {
 
     cx.clearRect(0, 0, state.viewport.width, state.viewport.height);
 
-    renderLayer(cx, Layer.Main, map, state);
-    renderLayer(cx, Layer.Walk, map, state);
-    renderLayer(cx, Layer.Item, map, state);
+    for (const visualLayer of state.map.visualLayers) {
+
+    }
+    renderLayer(cx, LayerType.Main, map, state);
+    renderLayer(cx, LayerType.Walk, map, state);
+    renderLayer(cx, LayerType.Item, map, state);
     //renderLayer(cx, cells, Layer.Enemy, map, state);
 }
 
-function renderLayer(cx: CanvasRenderingContext2D, layer: Layer, map: SmileyMap, state: EditorState) {
+function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: Int16Array) {
 
     if (state.viewport.width <= 0 || state.viewport.height <= 0)
         return;
@@ -104,13 +106,13 @@ function renderLayer(cx: CanvasRenderingContext2D, layer: Layer, map: SmileyMap,
 
     for (let x = leftTile; x <= rightTile; x++) {
         for (let y = topTile; y <= bottomTile; y++) {
-            //const tile = map.visualLayers .layers[layer][y * map.w + x];
-            // if (tile > 1) {
-            //     const texture = Textures.getTexture(layer, Math.floor(tile / 256));
-            //     texture.drawTile(cx, tile,
-            //         x * state.cellDiameter - vp.x,
-            //         y * state.cellDiameter - vp.y);
-            // }
+            const tile = layer[y * map.w + x];
+            if (tile > 1) {
+                const texture = Textures.getTexture(layer, Math.floor(tile / 256));
+                texture.drawTile(cx, tile,
+                    x * state.cellDiameter - vp.x,
+                    y * state.cellDiameter - vp.y);
+            }
         }
     }
 }
