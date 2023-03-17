@@ -1,10 +1,10 @@
-import { MapHeader } from "./MapFile";
+import { MapFileHeader } from "./MapFile";
 
 /**
  * Represents the state of the map in the store. Can be converted to and from a MapFile.
  */
 export interface MapState {
-    header: MapHeader,
+    header: MapFileHeader,
     idLayer: LayerState,
     variableLayer: LayerState,
     walkLayer: LayerState,
@@ -26,5 +26,4 @@ export interface LayerState {
     layer: LayerType;
     name: string;
     visible: boolean;
-    textureNames: string[];
 }

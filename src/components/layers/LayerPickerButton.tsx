@@ -8,6 +8,7 @@ interface Props {
 }
 
 export function LayerPickerButton(props: Props) {
+    // TODO: visibility toggle
     return (
         <ToggleButton
             key={props.layer.name}

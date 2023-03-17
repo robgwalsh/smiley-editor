@@ -1,34 +1,13 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { EditorState, initialEditorState } from "../../model/EditorState";
 import { Vector } from "../../model/Vector";
-import { TextFile } from "../../utils/HtmlUtils";
-import { MapFile } from "../../model/map/MapFile";
-import { convertLegacyFileToState, convertMapFileToState } from "../../model/map/converters";
-import { MapState } from "../../model/map/MapState";
-import { MapData, setMapData } from "../../model/map/MapData";
+import { loadMapImpl } from "./loadMap"
 
 export const editorSlice = createSlice({
     name: "editor",
     initialState: initialEditorState(),
     reducers: {
-        loadMap: (state: Draft<EditorState>, action: PayloadAction<TextFile>) => {
-            let map: MapState;
-            let data: MapData;
-            try {
-                const mapFile: MapFile = JSON.parse(action.payload.contents);
-                [map, data] = convertMapFileToState(mapFile);
-            } catch (e) {
-                // Maybe its a legacy file
-                try {
-                    [map, data] = convertLegacyFileToState(action.payload.contents);
-                } catch (e2) {
-                    alert(`can't load the map :( ${e2.message}`);
-                    return;
-                }
-            }
-            setMapData(data);
-            state.map = map;
-        },
+        loadMap: loadMapImpl,
         setViewportSize: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
             state.viewport.width = action.payload.x;
             state.viewport.height = action.payload.y;

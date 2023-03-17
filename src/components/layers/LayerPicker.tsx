@@ -1,4 +1,4 @@
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButtonGroup } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../hooks";
@@ -10,6 +10,9 @@ export function LayerPicker() {
 
     const state = useAppSelector<EditorState>(state => state.editor);
     const dispatch = useDispatch();
+
+    if (!state.map)
+        return (<></>)
 
     const handleSelection = (event: React.MouseEvent<HTMLElement>, newLayerName: string) => {
         if (newLayerName !== null) {

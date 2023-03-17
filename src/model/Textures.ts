@@ -1,36 +1,26 @@
-export class DefaultTextures {
-    public static readonly mainLayer = ["https://smiley-editor.s3.amazonaws.com/mainlayer.png"];
-    public static readonly walkLayer = ["https://smiley-editor.s3.amazonaws.com/walklayer.PNG"];
-    public static readonly itemLayer = [
-        "https://smiley-editor.s3.amazonaws.com/itemlayer1.png",
-        "https://smiley-editor.s3.amazonaws.com/itemlayer2.png"
-    ];
-    public static readonly enemyLayer = ["https://smiley-editor.s3.amazonaws.com/enemylayer.PNG"];
-}
+import { MapFileTexture, TextureType } from "./map/MapFile";
 
 export class Textures {
-
     private static readonly _textures = new Map<string, Texture>();
 
-    public static initializeDefaultTextures() {
-        this.initializeTexture(DefaultTextures.mainLayer, 16, 16);
-        this.initializeTexture(DefaultTextures.walkLayer, 16, 16);
-        this.initializeTexture(DefaultTextures.itemLayer, 16, 16);
-        this.initializeTexture(DefaultTextures.enemyLayer, 16, 16);
-    }
-
-    public static initializeTexture(urls: string[], width: number, height: number, force = false) {
-        if (force || !this._textures.get(urls[0])) {
-            this._textures.set(urls[0], new Texture(urls, width, height));
+    public static initializeTextures(texture: MapFileTexture, force = false) {
+        if (force || !this._textures.get(texture.name)) {
+            this._textures.set(`${texture.name}_tileset`, new Texture(texture.tilesetPaths, texture.width, texture.height, texture.textureType));
+            if (texture.editorPath) {
+                this._textures.set(`${texture.name}_editor`, new Texture([texture.editorPath], texture.width, texture.height, texture.textureType));
+            }
         }
     }
 
-    public static getTexture(url: string): Texture {
-        const texture = this._textures.get(url);
-        if (!texture) {
-            throw new Error(`there is no texture for ${url}`);
-        }
+    public static getTilesetTexture(name: string): Texture {
+        const texture = this._textures.get(`${name}_tileset`)
+        if (!texture)
+            throw new Error(`texture not found: ${name}`);
         return texture;
+    }
+
+    public static getEditorTexture(name: string): Texture {
+        return this._textures.get(`${name}_editor`) ?? this._textures.get(`${name}_tileset`);
     }
 }
 
@@ -43,7 +33,7 @@ export class Texture {
      * @param width number of tiles per row
      * @param height number of rows
      */
-    constructor(public readonly urls: string[], public readonly width, public readonly height) {
+    constructor(public readonly urls: string[], public readonly width, public readonly height, public readonly type: TextureType) {
         this._images = urls.map(url => {
             const img = document.createElement('img');
             img.width = 1024;
@@ -59,6 +49,10 @@ export class Texture {
         x: number,
         y: number) {
 
+        if (this.type === TextureType.Fringe) {
+            // TODO:
+        }
+
         const n = (this.width * this.height);
         const imageIndex = tile % n;
         const tileX = (tile % 16) * 64;
@@ -72,5 +66,3 @@ export class Texture {
             64, 64);        // destination width, height
     }
 }
-
-Textures.initializeDefaultTextures();

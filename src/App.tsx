@@ -6,7 +6,6 @@ import { MapViewer } from './components/map-viewer/MapViewer';
 import { MainMenu } from './components/menu/MainMenu';
 import { Welcome } from './components/Welcome';
 import { useAppSelector } from './hooks';
-import { useMap } from './model/map/MapState';
 
 const darkTheme = createTheme({
     palette: {
@@ -18,7 +17,6 @@ const padding = "20px";
 
 function App() {
     const state = useAppSelector(state => state.editor);
-    const map = useMap();
 
     return (
         <ThemeProvider theme={darkTheme}>
@@ -40,7 +38,7 @@ function App() {
 
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", flex: 1, margin: `0 ${padding} 0 ${padding}` }}>
                     <div style={{ flex: 1, height: "100%", backgroundColor: "#191919", borderRadius: "6px" }}>
-                        {map ? <MapViewer /> : <Welcome />}
+                        {state.map ? <MapViewer /> : <Welcome />}
                     </div>
 
                     <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding }}>

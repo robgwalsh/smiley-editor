@@ -6,7 +6,6 @@ export interface EditorState {
     activeLayerName;
     selectedTileIndex: number;
     viewport: Viewport;
-    cellDiameter: number;
     revision: number;
     mouseX: number;
     mouseY: number;
@@ -22,7 +21,6 @@ export function initialEditorState(): EditorState {
         mouseY: 0,
         selectedTileIndex: 1,
         revision: 0,
-        cellDiameter: 64,
         viewport: {
             x: 0,
             y: 0,

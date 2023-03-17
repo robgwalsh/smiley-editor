@@ -1,6 +1,6 @@
 import { LegacyMapReader } from "./LegacyMapReader";
 import { MapData } from "./MapData";
-import { MapFile, MapFileVisualLayer, MapHeader } from "./MapFile";
+import { MapFile, MapFileVisualLayer, MapFileHeader, TextureType, MapFileTexture } from "./MapFile";
 import { LayerType, MapState } from "./MapState";
 
 export function convertMapFileToState(map: MapFile): [MapState, MapData] {
@@ -10,8 +10,7 @@ export function convertMapFileToState(map: MapFile): [MapState, MapData] {
         return {
             layer: LayerType.Visual,
             name: `Visual ${i}`,
-            textureNames: ["mainlayer.png"], // TODO:
-            visible: true
+            visible: true,
         }
     });
 
@@ -76,9 +75,11 @@ export function convertLegacyFileToState(legacyFileContents: string): [MapState,
     const state: MapState = createDefaultState({
         width,
         height,
+        tileWidth: 64,
+        tileHeight: 64,
         idStart,
         song: "TODO:",
-        textures: [] // TODO:
+        textures: createCoreTextures()
     });
     const data: MapData = { layers: new Map<string, Int16Array>() }
 
@@ -118,39 +119,58 @@ function base64ToArrayBuffer(base64: string) {
     return bytes.buffer;
 }
 
-function createDefaultState(header: MapHeader): MapState {
+function createDefaultState(header: MapFileHeader): MapState {
     return {
-        header: { ...header },
+        header,
         idLayer: {
             layer: LayerType.Id,
-            textureNames: [],
             name: "id",
             visible: true
         },
         enemyLayer: {
             layer: LayerType.Enemy,
-            textureNames: ["enemylayer.PNG"],
             name: "Enemy",
             visible: true
         },
         itemLayer: {
             layer: LayerType.Item,
-            textureNames: ["itemlayer1.png", "itemlayer2.png"],
             name: "Item",
             visible: true
         },
         variableLayer: {
             layer: LayerType.Variable,
-            textureNames: [],
             name: "Variable",
             visible: true
         },
         walkLayer: {
             layer: LayerType.Walk,
-            textureNames: ["walklayer.PNG"],
             name: "Walk",
             visible: true
         },
         visualLayers: []
+    };
+}
+
+/**
+ * Creates texture definitions for the textures in the core game.
+ * @returns
+ */
+function createCoreTextures(): MapFileTexture[] {
+    return [
+        createCoreTexture("main", ["https://smiley-editor.s3.amazonaws.com/mainlayer.png"]),
+        createCoreTexture("walk", ["https://smiley-editor.s3.amazonaws.com/walklayer.PNG"]),
+        createCoreTexture("item", ["https://smiley-editor.s3.amazonaws.com/itemlayer1.png", "https://smiley-editor.s3.amazonaws.com/itemlayer2.png"]),
+        createCoreTexture("enemy", ["https://smiley-editor.s3.amazonaws.com/enemylayer.PNG"])
+    ];
+}
+
+function createCoreTexture(name: string, urls: string[]) {
+    return {
+        name: name,
+        textureType: TextureType.Normal,
+        tilesetPaths: urls,
+        editorPath: null,
+        width: 16, height: 16,
+        tileWidth: 64, tileHeight: 64,
     };
 }

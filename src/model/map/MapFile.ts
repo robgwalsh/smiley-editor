@@ -2,7 +2,7 @@
  * The structure of the JSON file format. Can be converted to and from a MapState.
  */
 export interface MapFile {
-    header: MapHeader,
+    header: MapFileHeader,
     idLayer: MapFileLayer,
     variableLayer: MapFileLayer,
     walkLayer: MapFileLayer,
@@ -11,15 +11,20 @@ export interface MapFile {
     visualLayers: MapFileVisualLayer[];
 }
 
-export interface MapHeader {
+export interface MapFileHeader {
     width: number;
     height: number;
+    tileWidth: number;
+    tileHeight: number;
     song: string;
     idStart: number;
-    textures: Texture[];
+    textures: MapFileTexture[];
 }
 
-export interface Texture {
+export interface MapFileTexture {
+    name: string;
+    width: number;
+    height: number;
     /**
      * file path(s) or url(s) to the image file containing the in-game tiles.
      */

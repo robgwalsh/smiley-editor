@@ -6,8 +6,8 @@ export function Footer() {
 
     const state: EditorState = useAppSelector(state => state.editor);
 
-    const mouseCellX = Math.floor((state.mouseX - state.viewport.x) / state.viewport.zoom / state.cellDiameter);
-    const mouseCellY = Math.floor((state.mouseY - state.viewport.y) / state.viewport.zoom / state.cellDiameter);
+    const mouseCellX = state.map ? Math.floor((state.mouseX - state.viewport.x) / state.viewport.zoom / state.map.header.tileWidth) : " - ";
+    const mouseCellY = state.map ? Math.floor((state.mouseY - state.viewport.y) / state.viewport.zoom / state.map.header.tileHeight) : " - ";
 
     const labelStyle = {
         fontWeight: 400,
