@@ -175,8 +175,8 @@ function createCoreTexture(id: number, name: string, urls: string[]): MapFileTex
         name: name,
         textureType: TextureType.Normal,
         tilesetPaths: urls,
-        editorPath: null,
         width: 16, height: 16,
+        tileWidth: 64, tileHeight: 64,
         id
     };
 }

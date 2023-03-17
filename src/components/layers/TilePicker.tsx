@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
-import { LayerState } from "../../model/map/MapState";
+import { LayerState, LayerType } from "../../model/map/MapState";
 import { Textures } from "../../model/Textures";
 
 export function TilePicker() {
@@ -16,10 +16,14 @@ export function TilePicker() {
     if (!activeLayer)
         return (<></>)
 
-    const texture = Textures.getEditorTexture(activeLayer.name);
-    // TODO for now we will assume the layer and associated texture are the same
-    // TODO: have mode where you can pick texture independently of layer, if we want. The model supports it!
+    const texture = Textures.getTexture(activeLayer.name);
 
+    if (activeLayer.layer === LayerType.Visual) {
+        // TODO: special cases for walk/item/enemy vs visual
+        // for visual, scroll through all textures??
+
+        // or maybe always scroll through all textures?? but by default synch to most obvious texture for the layer
+    }
 
     // TODO: buttons to cycle through images in the texture, if there is more than 1
     return (
@@ -30,7 +34,7 @@ export function TilePicker() {
                     <img
                         width={500}
                         style={{ objectFit: "contain" }}
-                        src={texture.urls[textureIndex]}
+                        src={texture.info.tilesetPaths[textureIndex]}
                     />
                     :
                     <div style={{ width: "500px", height: "500px", border: ".5px solid #efefef" }}>

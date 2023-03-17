@@ -3,6 +3,7 @@ import { Viewport } from "./Viewport";
 
 export interface EditorState {
     map: MapState;
+    isLoadingMap: boolean;
     activeLayerName;
     selectedTileIndex: number;
     viewport: Viewport;
@@ -16,6 +17,7 @@ export function initialEditorState(): EditorState {
     return {
         activeLayerName: null,
         map: null,
+        isLoadingMap: false,
         mouseOnMap: false,
         mouseX: 0,
         mouseY: 0,

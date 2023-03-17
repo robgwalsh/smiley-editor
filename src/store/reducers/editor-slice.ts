@@ -25,6 +25,9 @@ export const editorSlice = createSlice({
         setMouseOnMap: (state: Draft<EditorState>, action: PayloadAction<boolean>) => {
             state.mouseOnMap = action.payload;
         },
+        setIsMapLoading: (state: Draft<EditorState>, action: PayloadAction<boolean>) => {
+            state.isLoadingMap = action.payload;
+        },
         zoomAtMouse: (state: Draft<EditorState>, action: PayloadAction<boolean>) => {
             const scaleFactor = action.payload ? 1.15 : 0.87;
             const newZoom = Math.min(1, Math.max(.15, state.viewport.zoom * scaleFactor));
@@ -41,6 +44,6 @@ export const editorSlice = createSlice({
     },
 });
 
-export const { loadMap, setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse } = editorSlice.actions;
+export const { loadMap, setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading } = editorSlice.actions;
 
 export default editorSlice.reducer;

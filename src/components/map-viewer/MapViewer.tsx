@@ -115,7 +115,7 @@ function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: In
             const textureIndex = layer[index * 2];
             const tile = layer[index * 2 + 1];
             if (tile > 1) {
-                const texture: Texture = Textures.getTilesetTexture(state.map.header.textures[textureIndex].name);
+                const texture: Texture = Textures.getTexture(state.map.header.textures[textureIndex].name);
                 texture.drawTile(cx, tile,
                     x * tileWidth - vp.x,
                     y * tileHeight - vp.y);

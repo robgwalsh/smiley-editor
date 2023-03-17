@@ -26,17 +26,13 @@ export interface MapFileTexture {
     id: number;
     width: number;
     height: number;
+    tileWidth: number;
+    tileHeight: number;
     /**
      * file path(s) or url(s) to the image file containing the in-game tiles.
      */
     tilesetPaths: string[];
-    /**
-     * For fringe textures, this is a file path or url to the image to show as the tile picker
-     * in the editor. Should be omitted for Normal textures, which use the same tileset image
-     * in-game and in the editor
-     */
-    editorPath: string;
-    textureType: TextureType;
+    textureType: TextureType; // TODO: should there instead be a fringeCount or something? Not sure if the algorithm could support i.e. 4 or 8 fringe tiles
 }
 
 export interface MapFileLayer {

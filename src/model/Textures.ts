@@ -3,44 +3,47 @@ import { MapFileTexture, TextureType } from "./map/MapFile";
 export class Textures {
     private static readonly _textures = new Map<string, Texture>();
 
-    public static initializeTextures(texture: MapFileTexture, force = false) {
+    public static async initializeTextureAsync(texture: MapFileTexture, force = false): Promise<void> {
         if (force || !this._textures.get(texture.name)) {
-            this._textures.set(`${texture.name}_tileset`, new Texture(texture.tilesetPaths, texture.width, texture.height, texture.textureType));
-            if (texture.editorPath) {
-                this._textures.set(`${texture.name}_editor`, new Texture([texture.editorPath], texture.width, texture.height, texture.textureType));
-            }
+            const tx = await Texture.createAsync(texture);
+            this._textures.set(texture.name, tx);
         }
     }
 
-    public static getTilesetTexture(name: string): Texture {
-        const texture = this._textures.get(`${name}_tileset`)
+    public static getTexture(name: string): Texture {
+        const texture = this._textures.get(name);
         if (!texture)
             throw new Error(`texture not found: ${name}`);
         return texture;
     }
-
-    public static getEditorTexture(name: string): Texture {
-        return this._textures.get(`${name}_editor`) ?? this._textures.get(`${name}_tileset`);
-    }
 }
 
 export class Texture {
+    private constructor(
+        public readonly info: MapFileTexture,
+        private readonly _images: HTMLImageElement[]) {
+    }
 
-    private readonly _images: HTMLImageElement[];
+    public static async createAsync(textureInfo: MapFileTexture): Promise<Texture> {
+        const promises: Promise<HTMLImageElement>[] =
+            textureInfo.tilesetPaths
+                .map(url => new Promise<HTMLImageElement>((resolve, reject) => {
+                    const img = document.createElement('img');
+                    img.width = textureInfo.width;
+                    img.height = textureInfo.height;
+                    img.onerror = (event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) => {
+                        reject(`${source} ${lineno} ${colno} ${error.message}`);
+                    };
+                    img.onload = (e) => resolve(img);
+                    img.src = url;
+                }));
 
-    /**
-     * @param urls url of each image in the texture
-     * @param width number of tiles per row
-     * @param height number of rows
-     */
-    constructor(public readonly urls: string[], public readonly width, public readonly height, public readonly type: TextureType) {
-        this._images = urls.map(url => {
-            const img = document.createElement('img');
-            img.width = 1024;
-            img.height = 1024;
-            img.src = url;
-            return img;
-        });
+        const images: HTMLImageElement[] = [];
+        for (const p of promises) {
+            images.push(await p);
+        }
+
+        return new Texture(textureInfo, images);
     }
 
     public drawTile(
@@ -49,19 +52,21 @@ export class Texture {
         x: number,
         y: number) {
 
-        if (this.type === TextureType.Fringe) {
+        if (this.info.textureType === TextureType.Fringe) {
             // TODO:
         }
 
-        const n = (this.width * this.height);
+        const tilesWide = this.info.width / this.info.tileWidth;
+        const tilesHigh = this.info.height / this.info.tileHeight
+
+        const n = (tilesWide * tilesHigh);
         const imageIndex = tile % n;
-        const tileX = (tile % 16) * 64;
-        const tileY = Math.round((tile % n) / 16) * 64;
+        const tileX = (tile % tilesWide) * this.info.tileWidth;
+        const tileY = Math.round((tile % n) / tilesHigh) * this.info.tileHeight;
 
         const image = this._images[imageIndex];
         if (!image) {
-            return;
-            //throw new Error('texture image not loaded yet :O');
+            throw new Error('texture image not loaded yet :O');
         }
 
         cx.drawImage(

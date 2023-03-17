@@ -23,12 +23,43 @@ export function MainMenu() {
     const handleSave = async () => {
         if (!state.map)
             return;
-        const file: File = await HtmlUtils.promptUserForFile(".smh");
-        if (file) {
-            const mapFile = convertMapStateToFile(state.map, mapData);
-            const json = JSON.stringify(mapFile);
-            await HtmlUtils.downloadTextAsFile(json, file.name);
+
+        if (typeof (window as any).showSaveFilePicker === "undefined") {
+            alert("your browser hasn't implemented the file system API yet! Use chrome for now");
+            return;
         }
+
+        const opts = {
+            types: [
+                {
+                    description: "Smiley's Maze Hunt map file",
+                    accept: {
+                        "text/plain": [".smh"],
+                        "application/octet-stream": [".smh"]
+                    },
+                },
+            ],
+        };
+
+        const file = await (window as any).showSaveFilePicker(opts);
+
+
+
+
+        //const result = await (window as any).chooseFileSystemEntries({ type: "save-file" });
+
+        if (file) {
+
+        }
+
+        //const file: File = await HtmlUtils.promptUserForFile(".smh");
+
+
+        // if (file) {
+        //     const mapFile = convertMapStateToFile(state.map, mapData);
+        //     const json = JSON.stringify(mapFile);
+        //     await HtmlUtils.downloadTextAsFile(json, file.name);
+        // }
     };
 
     return (
