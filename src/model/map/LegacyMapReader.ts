@@ -19,10 +19,12 @@ export class LegacyMapReader {
     }
 
     public readLayer(w: number, h: number): Int16Array {
-        const result = new Int16Array(w * h);
+        const result = new Int16Array(w * h * 2);
         for (let row = 0; row < h; row++) {
             for (let col = 0; col < w; col++) {
-                result[row * w + col] = this.readInt(3);
+                const i = row * w * +col;
+                result[i] = 0; // texture index
+                result[i] = this.readInt(3);
             }
             this.readNewline();
         }

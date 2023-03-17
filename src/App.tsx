@@ -41,7 +41,7 @@ function App() {
                         {state.map ? <MapViewer /> : <Welcome />}
                     </div>
 
-                    <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding }}>
+                    <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding, width: "500px" }}>
                         <div style={{ flex: 1 }}>
                             <TilePicker />
                         </div>

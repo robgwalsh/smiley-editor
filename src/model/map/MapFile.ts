@@ -23,6 +23,7 @@ export interface MapFileHeader {
 
 export interface MapFileTexture {
     name: string;
+    id: number;
     width: number;
     height: number;
     /**

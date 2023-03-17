@@ -23,11 +23,14 @@ export function loadMapImpl(state: Draft<EditorState>, action: PayloadAction<Tex
         }
     }
 
-    // Update singletons that cant fit in redux
+    // TODO: if any required layers are missing, populate them
+
+    state.activeLayerName = "main"; // TODO:
+    state.map = map;
+
+    // Update singletons that dont make sense to put in the store
     setMapData(data);
     for (const texture of map.header.textures){
         Textures.initializeTextures(texture);
     }
-
-    state.map = map;
 }

@@ -90,6 +90,9 @@ function render(cx: CanvasRenderingContext2D, state: EditorState, mapData: MapDa
 }
 
 function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: Int16Array) {
+    if (!layer) {
+        throw new Error("'layer' cant be null");
+    }
     if (state.viewport.width <= 0 || state.viewport.height <= 0)
         return;
 

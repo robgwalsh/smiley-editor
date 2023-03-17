@@ -81,20 +81,26 @@ export function convertLegacyFileToState(legacyFileContents: string): [MapState,
         song: "TODO:",
         textures: createCoreTextures()
     });
+    state.visualLayers.push({
+        layer: LayerType.Visual,
+        name: "main",
+        visible: true
+    })
+
     const data: MapData = { layers: new Map<string, Int16Array>() }
 
     // The layers are matrices of 3 digit ascii numbers, with the width/height repeated before each
-    data.layers[state.idLayer.name] = loader.readLayer(width, height);
+    data.layers.set(state.idLayer.name, loader.readLayer(width, height));
     loader.readSize();
-    data.layers[state.variableLayer.name] = loader.readLayer(width, height);
+    data.layers.set(state.variableLayer.name, loader.readLayer(width, height));
     loader.readSize();
-    data.layers["Visual 0"] = loader.readLayer(width, height); // terrain data
+    data.layers.set(state.visualLayers[0].name, loader.readLayer(width, height)); // terrain data
     loader.readSize();
-    data.layers[state.walkLayer.name] = loader.readLayer(width, height); // collision data
+    data.layers.set(state.walkLayer.name, loader.readLayer(width, height)); // collision data
     loader.readSize();
-    data.layers[state.itemLayer.name] = loader.readLayer(width, height);
+    data.layers.set(state.itemLayer.name, loader.readLayer(width, height));
     loader.readSize();
-    data.layers[state.enemyLayer.name] = loader.readLayer(width, height);
+    data.layers.set(state.enemyLayer.name, loader.readLayer(width, height));
 
     return [state, data];
 }
@@ -157,20 +163,20 @@ function createDefaultState(header: MapFileHeader): MapState {
  */
 function createCoreTextures(): MapFileTexture[] {
     return [
-        createCoreTexture("main", ["https://smiley-editor.s3.amazonaws.com/mainlayer.png"]),
-        createCoreTexture("walk", ["https://smiley-editor.s3.amazonaws.com/walklayer.PNG"]),
-        createCoreTexture("item", ["https://smiley-editor.s3.amazonaws.com/itemlayer1.png", "https://smiley-editor.s3.amazonaws.com/itemlayer2.png"]),
-        createCoreTexture("enemy", ["https://smiley-editor.s3.amazonaws.com/enemylayer.PNG"])
+        createCoreTexture(0, "main", ["https://smiley-editor.s3.amazonaws.com/mainlayer.png"]),
+        createCoreTexture(1, "walk", ["https://smiley-editor.s3.amazonaws.com/walklayer.PNG"]),
+        createCoreTexture(2, "item", ["https://smiley-editor.s3.amazonaws.com/itemlayer1.png", "https://smiley-editor.s3.amazonaws.com/itemlayer2.png"]),
+        createCoreTexture(3, "enemy", ["https://smiley-editor.s3.amazonaws.com/enemylayer.PNG"])
     ];
 }
 
-function createCoreTexture(name: string, urls: string[]) {
+function createCoreTexture(id: number, name: string, urls: string[]): MapFileTexture {
     return {
         name: name,
         textureType: TextureType.Normal,
         tilesetPaths: urls,
         editorPath: null,
         width: 16, height: 16,
-        tileWidth: 64, tileHeight: 64,
+        id
     };
 }

@@ -58,8 +58,14 @@ export class Texture {
         const tileX = (tile % 16) * 64;
         const tileY = Math.round((tile % n) / 16) * 64;
 
+        const image = this._images[imageIndex];
+        if (!image) {
+            return;
+            //throw new Error('texture image not loaded yet :O');
+        }
+
         cx.drawImage(
-            this._images[imageIndex],
+            image,
             tileX, tileY,   // source x, y
             64, 64,         // source width,height
             x, y,           // destination x, y

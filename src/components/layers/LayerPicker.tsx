@@ -29,13 +29,13 @@ export function LayerPicker() {
             onChange={handleSelection}
             aria-label="Platform"
         >
-            {state.map.visualLayers.map(layer => <LayerPickerButton layer={layer} />)}
-            <LayerPickerButton layer={state.map.walkLayer} />
-            <LayerPickerButton layer={state.map.itemLayer} />
-            <LayerPickerButton layer={state.map.enemyLayer} />
+            {state.map.visualLayers.map(layer => <LayerPickerButton layer={layer} key={layer.name} />)}
+            <LayerPickerButton layer={state.map.walkLayer} key={state.map.walkLayer.name} />
+            <LayerPickerButton layer={state.map.itemLayer} key={state.map.itemLayer.name} />
+            <LayerPickerButton layer={state.map.enemyLayer} key={state.map.enemyLayer.name} />
 
             {/* TODO: "event" picker that represents both id and variable */}
-            <LayerPickerButton layer={state.map.variableLayer} />
+            <LayerPickerButton layer={state.map.variableLayer} key={state.map.variableLayer.name} />
         </ToggleButtonGroup>
     );
 }
