@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useWheelZoom } from "../../hooks/useWheelZoom";
 import { EditorState } from "../../model/EditorState";
 import { MapData, useMapData } from "../../model/map/MapData";
+import { MapError } from "../../model/map/MapError";
+import { LayerType } from "../../model/map/MapState";
 import { Texture, Textures } from "../../model/Textures";
 import { Vector } from "../../model/Vector";
 import { setMouseOnMap, setMousePosition, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/reducers/editor-slice";
@@ -82,14 +84,14 @@ export function MapViewer() {
 function render(cx: CanvasRenderingContext2D, state: EditorState, mapData: MapData) {
     cx.clearRect(0, 0, state.viewport.width, state.viewport.height);
     for (const visualLayer of state.map.visualLayers) {
-        renderLayer(cx, state, mapData.layers.get(visualLayer.name));
+        renderLayer(cx, state, mapData.layers.get(visualLayer.name), LayerType.Visual);
     }
-    renderLayer(cx, state, mapData.layers.get(state.map.walkLayer.name));
-    renderLayer(cx, state, mapData.layers.get(state.map.itemLayer.name));
-    renderLayer(cx, state, mapData.layers.get(state.map.enemyLayer.name));
+    renderLayer(cx, state, mapData.layers.get(state.map.walkLayer.name), LayerType.Walk);
+    renderLayer(cx, state, mapData.layers.get(state.map.itemLayer.name), LayerType.Item);
+    renderLayer(cx, state, mapData.layers.get(state.map.enemyLayer.name), LayerType.Enemy);
 }
 
-function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: Int16Array) {
+function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: Int16Array, layerType: LayerType) {
     if (!layer) {
         throw new Error("'layer' cant be null");
     }
@@ -112,10 +114,14 @@ function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: In
 
             // Each cell in the matrix has 2 int16s: the first is the index of the texture, the second
             // is the index of the tile within that texture.
-            const textureIndex = layer[index * 2];
+            const textureId = layer[index * 2];
             const tile = layer[index * 2 + 1];
             if (tile > 1) {
-                const texture: Texture = Textures.getTexture(state.map.header.textures[textureIndex].name);
+                const textureInfo = state.map.header.textures.find(t => t.id === textureId);
+                if (!textureInfo)
+                    throw new MapError(`${layerType} layer ${x}, ${y} points to texture ${textureId} which doesn't exist`);
+
+                const texture: Texture = Textures.getTexture(state.map.header.textures[textureId].name);
                 texture.drawTile(cx, tile,
                     x * tileWidth - vp.x,
                     y * tileHeight - vp.y);
