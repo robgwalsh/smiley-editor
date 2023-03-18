@@ -55,8 +55,8 @@ export function MapViewer() {
             cx.imageSmoothingEnabled = false;
             cx.transform(
                 state.viewport.zoom,  // x scaling
-                0,                    // x skewing
                 0,                    // y skewing
+                0,                    // x skewing
                 state.viewport.zoom,  // y scaling
                 -state.viewport.x,    // x offset
                 -state.viewport.y);   // y offset
