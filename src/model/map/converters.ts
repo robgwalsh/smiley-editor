@@ -90,17 +90,17 @@ export function convertLegacyFileToState(legacyFileContents: string): [MapState,
     const data: MapData = { layers: new Map<string, Int16Array>() }
 
     // The layers are matrices of 3 digit ascii numbers, with the width/height repeated before each
-    data.layers.set(state.idLayer.name, loader.readLayer(width, height));
+    data.layers.set(state.idLayer.name, loader.readLayer(0, width, height));
     loader.readSize();
-    data.layers.set(state.variableLayer.name, loader.readLayer(width, height));
+    data.layers.set(state.variableLayer.name, loader.readLayer(0, width, height));
     loader.readSize();
-    data.layers.set(state.visualLayers[0].name, loader.readLayer(width, height)); // terrain data
+    data.layers.set(state.visualLayers[0].name, loader.readLayer(0, width, height)); // terrain data
     loader.readSize();
-    data.layers.set(state.walkLayer.name, loader.readLayer(width, height)); // collision data
+    data.layers.set(state.walkLayer.name, loader.readLayer(1, width, height)); // collision data
     loader.readSize();
-    data.layers.set(state.itemLayer.name, loader.readLayer(width, height));
+    data.layers.set(state.itemLayer.name, loader.readLayer(2, width, height));
     loader.readSize();
-    data.layers.set(state.enemyLayer.name, loader.readLayer(width, height));
+    data.layers.set(state.enemyLayer.name, loader.readLayer(3, width, height));
 
     return [state, data];
 }
