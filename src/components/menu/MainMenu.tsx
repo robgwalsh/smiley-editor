@@ -2,7 +2,7 @@ import { MenuItem } from '@mui/material';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { EditorState } from '../../model/EditorState';
-import { loadMapAsync } from '../../store/actrions/loadMapAsync';
+import { loadMapAsync } from '../../store/actions/loadMapAsync';
 import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
 import { LayerPicker } from '../layers/LayerPicker';
 import { ZoomSlider } from './ZoomSlider';

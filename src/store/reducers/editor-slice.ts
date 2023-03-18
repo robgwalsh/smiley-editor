@@ -1,7 +1,7 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { EditorState, initialEditorState } from "../../model/EditorState";
 import { Vector } from "../../model/Vector";
-import { loadMapAsync } from "../actrions/loadMapAsync"
+import { loadMapAsync } from "../actions/loadMapAsync"
 
 export const editorSlice = createSlice({
     name: "editor",
