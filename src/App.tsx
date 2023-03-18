@@ -43,6 +43,7 @@ function App() {
 
                     <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding, width: "500px" }}>
                         <div style={{ flex: 1 }}>
+                            {/* TODO: show special picker for id/variable ("event") layer */}
                             <TilePicker />
                         </div>
                     </div>

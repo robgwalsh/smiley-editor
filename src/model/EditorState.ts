@@ -6,6 +6,8 @@ export interface EditorState {
     isLoadingMap: boolean;
     activeLayerName;
     selectedTileIndex: number;
+    selectedTextureName: string;
+    selectedTextureIndex: number;
     viewport: Viewport;
     revision: number;
     mouseX: number;
@@ -16,6 +18,8 @@ export interface EditorState {
 export function initialEditorState(): EditorState {
     return {
         activeLayerName: null,
+        selectedTextureName: null,
+        selectedTextureIndex: 0,
         map: null,
         isLoadingMap: false,
         mouseOnMap: false,

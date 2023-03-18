@@ -83,7 +83,7 @@ export function convertLegacyFileToState(legacyFileContents: string): [MapState,
     });
     state.visualLayers.push({
         layer: LayerType.Visual,
-        name: "main",
+        name: "Visual 1",
         visible: true
     })
 
