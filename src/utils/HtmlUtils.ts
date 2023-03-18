@@ -1,3 +1,5 @@
+import { Vector } from "../model/Vector";
+
 export class HtmlUtils {
     /**
      * Saves the contents of the given canvas to a .png
@@ -234,7 +236,15 @@ export class HtmlUtils {
         document.body.removeChild(textarea);
     }
 
-    public static getMouseButton(e: PointerEvent): MouseButton {
+    public static getMousePosition(e: React.MouseEvent): Vector {
+        const box: DOMRect = e.currentTarget.getBoundingClientRect();
+        return new Vector(
+            e.clientX - box.left,
+            e.clientY - box.top
+        );
+    }
+
+    public static getMouseButton(e: React.MouseEvent): MouseButton {
         switch (e.button) {
             case 1: return MouseButton.Middle;
             case 2: return MouseButton.Right;

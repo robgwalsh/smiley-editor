@@ -1,7 +1,7 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
-import { EditorState, initialEditorState } from "../../model/EditorState";
-import { Vector } from "../../model/Vector";
-import { loadMapAsync } from "../actions/loadMapAsync"
+import { EditorState, initialEditorState } from "../model/EditorState";
+import { Vector } from "../model/Vector";
+import { loadMapAsync } from "./actions/loadMapAsync"
 
 export const editorSlice = createSlice({
     name: "editor",
@@ -10,6 +10,10 @@ export const editorSlice = createSlice({
         setViewportSize: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
             state.viewport.width = action.payload.x;
             state.viewport.height = action.payload.y;
+        },
+        setViewportOffset: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
+            state.viewport.x = action.payload.x;
+            state.viewport.y = action.payload.y;
         },
         setActiveLayerName: (state: Draft<EditorState>, action: PayloadAction<string>) => {
             state.activeLayerName = action.payload;
@@ -35,9 +39,9 @@ export const editorSlice = createSlice({
                 // TODO: doesnt work yet :(
                 // const mouseP = new Vector(state.mouseX, state.mouseY);
                 // const delta = mouseP.subVector(mouseP.multScalar(newZoom / state.viewport.zoom));
+                // state.viewport.x = state.viewport.x - delta.x;
+                // state.viewport.y = state.viewport.y - delta.y;
                 state.viewport.zoom = newZoom;
-                // state.viewport.x = state.viewport.x + delta.x;
-                // state.viewport.y = state.viewport.y + delta.y;
             }
         },
     },
@@ -60,6 +64,6 @@ export const editorSlice = createSlice({
     },
 });
 
-export const { setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading } = editorSlice.actions;
+export const { setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading, setViewportOffset } = editorSlice.actions;
 
 export default editorSlice.reducer;

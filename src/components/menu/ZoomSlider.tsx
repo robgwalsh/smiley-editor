@@ -2,7 +2,7 @@ import { Button, Input, MenuItem, Slider } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
-import { setZoom } from "../../store/reducers/editor-slice";
+import { setZoom } from "../../store/editor-slice";
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 

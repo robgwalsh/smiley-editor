@@ -6,6 +6,9 @@ export function Footer() {
 
     const state: EditorState = useAppSelector(state => state.editor);
 
+    if (!state.map)
+        return <div style={{ height: "35px" }}></div>
+
     const mouseCellX = state.map ? Math.floor((state.mouseX - state.viewport.x) / state.viewport.zoom / state.map.header.tileWidth) : " - ";
     const mouseCellY = state.map ? Math.floor((state.mouseY - state.viewport.y) / state.viewport.zoom / state.map.header.tileHeight) : " - ";
 

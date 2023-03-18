@@ -1,8 +1,11 @@
 import { MenuItem } from '@mui/material';
 import React from 'react';
+import { batch } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { EditorState } from '../../model/EditorState';
+import { Vector } from '../../model/Vector';
 import { loadMapAsync } from '../../store/actions/loadMapAsync';
+import { setViewportOffset, setZoom } from '../../store/editor-slice';
 import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
 import { LayerPicker } from '../layers/LayerPicker';
 import { ZoomSlider } from './ZoomSlider';
@@ -56,13 +59,19 @@ export function MainMenu() {
         // }
     };
 
+    const handleResetViewport = () => {
+        dispatch(setViewportOffset(new Vector(0, 0)));
+        dispatch(setZoom(1));
+    };
+
     return (
         <div style={{ display: "flex", alignItems: "center", height: "50px" }}>
 
             <MenuItem onClick={handleLoad}>Load</MenuItem>
             <MenuItem onClick={handleSave}>Save</MenuItem>
+            <MenuItem onClick={handleResetViewport}>Reset Viewport</MenuItem>
 
-            <ZoomSlider></ZoomSlider>
+            {state.map && <ZoomSlider />}
 
             <div style={{ flex: 1 }}></div>
 
