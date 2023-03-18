@@ -236,15 +236,15 @@ export class HtmlUtils {
         document.body.removeChild(textarea);
     }
 
-    public static getMousePosition(e: React.MouseEvent): Vector {
-        const box: DOMRect = e.currentTarget.getBoundingClientRect();
+    public static getMousePosition(e: PointerEvent): Vector {
+        const box: DOMRect = (e.currentTarget as any).getBoundingClientRect();
         return new Vector(
             e.clientX - box.left,
             e.clientY - box.top
         );
     }
 
-    public static getMouseButton(e: React.MouseEvent): MouseButton {
+    public static getMouseButton(e: PointerEvent): MouseButton {
         switch (e.button) {
             case 1: return MouseButton.Middle;
             case 2: return MouseButton.Right;

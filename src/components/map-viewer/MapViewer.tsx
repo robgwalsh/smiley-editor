@@ -7,18 +7,13 @@ import { MapError } from "../../model/map/MapError";
 import { LayerType } from "../../model/map/MapState";
 import { Texture, Textures } from "../../model/Textures";
 import { Vector } from "../../model/Vector";
-import { setMouseOnMap, setMousePosition, setViewportOffset, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/editor-slice";
-import { HtmlUtils, MouseButton } from "../../utils/HtmlUtils";
+import { setMouseOnMap, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/editor-slice";
+import { MapEventHandler } from "./MapEventHandler";
 
 export function MapViewer() {
-
-    console.log("render");
-
     const state: EditorState = useAppSelector(state => state.editor);
     const mapData: MapData = useMapData();
     const dispatch = useAppDispatch();
-
-    const [dragPoint, setDragPoint] = useState<Vector | null>(null);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -33,13 +28,23 @@ export function MapViewer() {
             canvasRef.current.height = height;
     }
 
-    // Listen to size changes
+    // Do initial event setup on first render
     useLayoutEffect(() => {
+
+        console.log("fist render");
+
+        const eventHandler = new MapEventHandler(containerRef.current, dispatch);
+
         const observer = new ResizeObserver((entries) => {
             dispatch(setViewportSize(new Vector(entries[0].contentRect.width, entries[0].contentRect.height)));
         });
         observer.observe(containerRef.current);
-        return () => observer.disconnect();
+
+        return () => {
+            console.log("mapviewer cleanup");
+            observer.disconnect();
+            eventHandler.dispose();
+        };
     }, []);
 
     useWheelZoom((e: WheelEvent) => {
@@ -47,41 +52,6 @@ export function MapViewer() {
             dispatch(zoomAtCursor(e.deltaY < 0 || e.deltaX < 0));
         }
     });
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        const p = HtmlUtils.getMousePosition(e);
-
-        if (dragPoint) {
-            const diff = dragPoint.subVector(p);
-            console.log(`right click move: ${diff.x}, ${diff.y}`);
-            setDragPoint(p);
-            //dispatch(setViewportOffset(new Vector(state.viewport.x + diff.x, state.viewport.y + diff.y)));
-        }
-
-        dispatch(setMousePosition(p));
-    };
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-        const button = HtmlUtils.getMouseButton(e);
-        const p = HtmlUtils.getMousePosition(e);
-
-        if (button === MouseButton.Right) {
-            console.log(`mouse down: ${p.x}, ${p.y}`);
-            setDragPoint(p);
-        } else {
-
-        }
-    }
-
-    const handleMouseUp = (e: React.MouseEvent) => {
-        const p = HtmlUtils.getMousePosition(e);
-
-        if (dragPoint) {
-            setDragPoint(null);
-        } else {
-
-        }
-    }
 
     const handleContextMenu = (e) => {
         e.preventDefault();
@@ -93,12 +63,12 @@ export function MapViewer() {
             const cx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
             cx.imageSmoothingEnabled = false;
             cx.transform(
-                state.viewport.zoom,  // x scaling
-                0,                    // x skewing
-                0,                    // y skewing
-                state.viewport.zoom,  // y scaling
-                -state.viewport.x,    // x offset
-                -state.viewport.y);   // y offset
+                state.zoom,  // x scaling
+                0,           // x skewing
+                0,           // y skewing
+                state.zoom,  // y scaling
+                0,           // x offset
+                0);          // y offset
             render(cx, state, mapData);
         }
     });
@@ -106,9 +76,6 @@ export function MapViewer() {
     return (
         <div
             style={{ position: "relative", overflow: "hidden", height: "100%" }}
-            onMouseMove={handleMouseMove}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
             onContextMenu={handleContextMenu}
             onMouseEnter={(e) => dispatch(setMouseOnMap(true))}
             onMouseLeave={(e) => dispatch(setMouseOnMap(false))}
@@ -144,10 +111,10 @@ function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: In
     const tileWidth = state.map.header.tileWidth;
     const tileHeight = state.map.header.tileHeight;
 
-    const leftTile = Math.max(0, Math.round(vp.x / vp.zoom / tileWidth));
-    const rightTile = Math.min(state.map.header.tileWidth - 1, Math.round((vp.x + vp.width) / vp.zoom / tileWidth));
-    const topTile = Math.max(0, Math.round(vp.y / vp.zoom / tileHeight));
-    const bottomTile = Math.min(state.map.header.tileHeight - 1, Math.round((vp.y + vp.height) / vp.zoom / tileHeight));
+    const leftTile = Math.max(0, Math.round(vp.x / state.zoom / tileWidth));
+    const rightTile = Math.min(state.map.header.width - 1, Math.round((vp.x + vp.width) / state.zoom / tileWidth));
+    const topTile = Math.max(0, Math.round(vp.y / state.zoom / tileHeight));
+    const bottomTile = Math.min(state.map.header.height - 1, Math.round((vp.y + vp.height) / state.zoom / tileHeight));
 
     for (let x = leftTile; x <= rightTile; x++) {
         for (let y = topTile; y <= bottomTile; y++) {

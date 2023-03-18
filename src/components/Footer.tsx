@@ -9,8 +9,8 @@ export function Footer() {
     if (!state.map)
         return <div style={{ height: "35px" }}></div>
 
-    const mouseCellX = state.map ? Math.floor((state.mouseX - state.viewport.x) / state.viewport.zoom / state.map.header.tileWidth) : " - ";
-    const mouseCellY = state.map ? Math.floor((state.mouseY - state.viewport.y) / state.viewport.zoom / state.map.header.tileHeight) : " - ";
+    const mouseCellX = state.map ? Math.floor((state.mouseX - state.viewport.x) / state.zoom / state.map.header.tileWidth) : " - ";
+    const mouseCellY = state.map ? Math.floor((state.mouseY - state.viewport.y) / state.zoom / state.map.header.tileHeight) : " - ";
 
     const labelStyle = {
         fontWeight: 400,

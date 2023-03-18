@@ -15,11 +15,15 @@ export const editorSlice = createSlice({
             state.viewport.x = action.payload.x;
             state.viewport.y = action.payload.y;
         },
+        pan: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
+            state.viewport.x = Math.max(0, state.viewport.x + action.payload.x);
+            state.viewport.y = Math.max(0, state.viewport.y + action.payload.y);
+        },
         setActiveLayerName: (state: Draft<EditorState>, action: PayloadAction<string>) => {
             state.activeLayerName = action.payload;
         },
         setZoom: (state: Draft<EditorState>, action: PayloadAction<number>) => {
-            state.viewport.zoom = action.payload;
+            state.zoom = action.payload;
         },
         setMousePosition: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
             state.mouseX = action.payload.x;
@@ -33,15 +37,15 @@ export const editorSlice = createSlice({
         },
         zoomAtMouse: (state: Draft<EditorState>, action: PayloadAction<boolean>) => {
             const scaleFactor = action.payload ? 1.15 : 0.87;
-            const newZoom = Math.min(1, Math.max(.15, state.viewport.zoom * scaleFactor));
-            if (newZoom !== state.viewport.zoom) {
+            const newZoom = Math.min(1, Math.max(.15, state.zoom * scaleFactor));
+            if (newZoom !== state.zoom) {
                 // Center the viewport around the mouse position.
                 // TODO: doesnt work yet :(
                 // const mouseP = new Vector(state.mouseX, state.mouseY);
                 // const delta = mouseP.subVector(mouseP.multScalar(newZoom / state.viewport.zoom));
                 // state.viewport.x = state.viewport.x - delta.x;
                 // state.viewport.y = state.viewport.y - delta.y;
-                state.viewport.zoom = newZoom;
+                state.zoom = newZoom;
             }
         },
     },
@@ -64,6 +68,6 @@ export const editorSlice = createSlice({
     },
 });
 
-export const { setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading, setViewportOffset } = editorSlice.actions;
+export const { setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading, setViewportOffset, pan } = editorSlice.actions;
 
 export default editorSlice.reducer;
