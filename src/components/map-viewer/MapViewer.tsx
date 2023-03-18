@@ -1,16 +1,17 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useWheelZoom } from "../../hooks/useWheelZoom";
-import { EditorState, Layer } from "../../model/EditorState";
-import { SmileyMap, useMap } from "../../model/SmileyMap";
-import { Textures } from "../../model/Textures";
+import { EditorState } from "../../model/EditorState";
+import { MapData, useMapData } from "../../model/map/MapData";
+import { MapError } from "../../model/map/MapError";
+import { LayerType } from "../../model/map/MapState";
+import { Texture, Textures } from "../../model/Textures";
 import { Vector } from "../../model/Vector";
 import { setMouseOnMap, setMousePosition, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/reducers/editor-slice";
 
 export function MapViewer() {
-
-    const state = useAppSelector<EditorState>(state => state.editor);
-    const map = useMap();
+    const state: EditorState = useAppSelector(state => state.editor);
+    const mapData: MapData = useMapData();
     const dispatch = useAppDispatch();
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -50,7 +51,7 @@ export function MapViewer() {
     };
 
     useEffect(() => {
-        if (map && canvasRef.current) {
+        if (state.map && canvasRef.current) {
             const cx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
             cx.imageSmoothingEnabled = false;
             cx.transform(
@@ -60,7 +61,7 @@ export function MapViewer() {
                 state.viewport.zoom,  // y scaling
                 -state.viewport.x,    // x offset
                 -state.viewport.y);   // y offset
-            render(cx, map, state);
+            render(cx, state, mapData);
         }
     });
 
@@ -80,36 +81,50 @@ export function MapViewer() {
     )
 }
 
-function render(cx: CanvasRenderingContext2D, map: SmileyMap, state: EditorState) {
-
+function render(cx: CanvasRenderingContext2D, state: EditorState, mapData: MapData) {
     cx.clearRect(0, 0, state.viewport.width, state.viewport.height);
-
-    renderLayer(cx, Layer.Main, map, state);
-    renderLayer(cx, Layer.Walk, map, state);
-    renderLayer(cx, Layer.Item, map, state);
-    //renderLayer(cx, cells, Layer.Enemy, map, state);
+    for (const visualLayer of state.map.visualLayers) {
+        renderLayer(cx, state, mapData.layers.get(visualLayer.name), LayerType.Visual);
+    }
+    renderLayer(cx, state, mapData.layers.get(state.map.walkLayer.name), LayerType.Walk);
+    renderLayer(cx, state, mapData.layers.get(state.map.itemLayer.name), LayerType.Item);
+    renderLayer(cx, state, mapData.layers.get(state.map.enemyLayer.name), LayerType.Enemy);
 }
 
-function renderLayer(cx: CanvasRenderingContext2D, layer: Layer, map: SmileyMap, state: EditorState) {
-
+function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: Int16Array, layerType: LayerType) {
+    if (!layer) {
+        throw new Error("'layer' cant be null");
+    }
     if (state.viewport.width <= 0 || state.viewport.height <= 0)
         return;
 
     const vp = state.viewport;
 
-    const leftTile = Math.round(vp.x / vp.zoom / state.cellDiameter);
-    const rightTile = Math.round((vp.x + vp.width) / vp.zoom / state.cellDiameter);
-    const topTile = Math.round(vp.y / vp.zoom / state.cellDiameter);
-    const bottomTile = Math.round((vp.y + vp.height) / vp.zoom / state.cellDiameter);
+    const tileWidth = state.map.header.tileWidth;
+    const tileHeight = state.map.header.tileHeight;
+
+    const leftTile = Math.round(vp.x / vp.zoom / tileWidth);
+    const rightTile = Math.round((vp.x + vp.width) / vp.zoom / tileWidth);
+    const topTile = Math.round(vp.y / vp.zoom / tileHeight);
+    const bottomTile = Math.round((vp.y + vp.height) / vp.zoom / tileHeight);
 
     for (let x = leftTile; x <= rightTile; x++) {
         for (let y = topTile; y <= bottomTile; y++) {
-            const tile = map.layers[layer][y * map.w + x];
+            const index = y * state.map.header.width + x;
+
+            // Each cell in the matrix has 2 int16s: the first is the id of the texture, the second
+            // is the index of the tile within that texture.
+            const textureId = layer[index * 2];
+            const tile = layer[index * 2 + 1];
             if (tile > 1) {
-                const texture = Textures.getTexture(layer, Math.floor(tile / 256));
+                const textureInfo = state.map.header.textures.find(t => t.id === textureId);
+                if (!textureInfo)
+                    throw new MapError(`${layerType} layer ${x}, ${y} points to texture ${textureId} which doesn't exist`);
+
+                const texture: Texture = Textures.getTexture(state.map.header.textures[textureId].name);
                 texture.drawTile(cx, tile,
-                    x * state.cellDiameter - vp.x,
-                    y * state.cellDiameter - vp.y);
+                    x * tileWidth - vp.x,
+                    y * tileHeight - vp.y);
             }
         }
     }

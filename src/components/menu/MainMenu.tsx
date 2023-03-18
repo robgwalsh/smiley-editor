@@ -1,23 +1,59 @@
-import { AppBar, MenuItem, Toolbar } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import React from 'react';
-import { useAppDispatch } from '../../hooks';
-import { SmileyMapLoader } from '../../model/SmileyMapLoader';
-import { loadMap } from '../../store/reducers/editor-slice';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { EditorState } from '../../model/EditorState';
+import { loadMapAsync } from '../../store/actions/loadMapAsync';
 import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
 import { LayerPicker } from '../layers/LayerPicker';
 import { ZoomSlider } from './ZoomSlider';
 
 export function MainMenu() {
 
+    const state: EditorState = useAppSelector(state => state.editor);
     const dispatch = useAppDispatch();
 
     const handleLoad = async () => {
         const file: TextFile = await HtmlUtils.promptToLoadTextFile(".smh");
-        dispatch(loadMap(file));
+        if (file) {
+            dispatch(loadMapAsync(file));
+        }
     };
 
-    const handleSave = () => {
-        alert("todo");
+    const handleSave = async () => {
+        if (!state.map)
+            return;
+
+        if (typeof (window as any).showSaveFilePicker === "undefined") {
+            alert("your browser hasn't implemented the file system API yet! Use chrome for now");
+            return;
+        }
+
+        const opts = {
+            types: [
+                {
+                    description: "Smiley's Maze Hunt map file",
+                    accept: {
+                        "text/plain": [".smh"],
+                        "application/octet-stream": [".smh"]
+                    },
+                },
+            ],
+        };
+
+        const file = await (window as any).showSaveFilePicker(opts);
+
+        if (file) {
+
+        }
+
+        //const file: File = await HtmlUtils.promptUserForFile(".smh");
+
+
+        // if (file) {
+        //     const mapFile = convertMapStateToFile(state.map, mapData);
+        //     const json = JSON.stringify(mapFile);
+        //     await HtmlUtils.downloadTextAsFile(json, file.name);
+        // }
     };
 
     return (

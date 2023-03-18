@@ -1,25 +1,18 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
-import { EditorState, initialEditorState, LayerState } from "../../model/EditorState";
-import { setMap } from "../../model/SmileyMap";
-import { SmileyMapLoader } from "../../model/SmileyMapLoader";
+import { EditorState, initialEditorState } from "../../model/EditorState";
 import { Vector } from "../../model/Vector";
-import { TextFile } from "../../utils/HtmlUtils";
+import { loadMapAsync } from "../actions/loadMapAsync"
 
 export const editorSlice = createSlice({
     name: "editor",
     initialState: initialEditorState(),
     reducers: {
-        loadMap: (state: Draft<EditorState>, action: PayloadAction<TextFile>) => {
-            // The map is accessed via a singleton because it is too large to store in redux!!
-            setMap(SmileyMapLoader.load(action.payload.contents));
-            state.mapFileName = action.payload.name; // this is mainly just to trigger a state update
-        },
         setViewportSize: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
             state.viewport.width = action.payload.x;
             state.viewport.height = action.payload.y;
         },
-        setActiveLayer: (state: Draft<EditorState>, action: PayloadAction<LayerState>) => {
-            state.activeLayer = action.payload;
+        setActiveLayerName: (state: Draft<EditorState>, action: PayloadAction<string>) => {
+            state.activeLayerName = action.payload;
         },
         setZoom: (state: Draft<EditorState>, action: PayloadAction<number>) => {
             state.viewport.zoom = action.payload;
@@ -31,12 +24,15 @@ export const editorSlice = createSlice({
         setMouseOnMap: (state: Draft<EditorState>, action: PayloadAction<boolean>) => {
             state.mouseOnMap = action.payload;
         },
+        setIsMapLoading: (state: Draft<EditorState>, action: PayloadAction<boolean>) => {
+            state.isLoadingMap = action.payload;
+        },
         zoomAtMouse: (state: Draft<EditorState>, action: PayloadAction<boolean>) => {
             const scaleFactor = action.payload ? 1.15 : 0.87;
             const newZoom = Math.min(1, Math.max(.15, state.viewport.zoom * scaleFactor));
             if (newZoom !== state.viewport.zoom) {
                 // Center the viewport around the mouse position.
-                // TODO:
+                // TODO: doesnt work yet :(
                 // const mouseP = new Vector(state.mouseX, state.mouseY);
                 // const delta = mouseP.subVector(mouseP.multScalar(newZoom / state.viewport.zoom));
                 state.viewport.zoom = newZoom;
@@ -45,8 +41,25 @@ export const editorSlice = createSlice({
             }
         },
     },
+    extraReducers: (builder) => {
+        builder
+            .addCase(loadMapAsync.pending, (state, action) => {
+                state.isLoadingMap = true;
+            })
+            .addCase(loadMapAsync.fulfilled, (state, action) => {
+                state.isLoadingMap = false;
+                state.map = action.payload;
+                state.activeLayerName = state.map.visualLayers[0].name;
+                state.selectedTextureName = state.map.header.textures[0].name;
+                state.selectedTextureIndex = 0;
+            })
+            .addCase(loadMapAsync.rejected, (state, action) => {
+                state.isLoadingMap = false;
+                alert(`ERROR IN PROGRAM ${action.error.message}`);
+            });
+    },
 });
 
-export const { loadMap, setViewportSize, setActiveLayer, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse } = editorSlice.actions;
+export const { setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading } = editorSlice.actions;
 
 export default editorSlice.reducer;
