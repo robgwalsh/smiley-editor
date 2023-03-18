@@ -112,7 +112,7 @@ function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: In
         for (let y = topTile; y <= bottomTile; y++) {
             const index = y * state.map.header.width + x;
 
-            // Each cell in the matrix has 2 int16s: the first is the index of the texture, the second
+            // Each cell in the matrix has 2 int16s: the first is the id of the texture, the second
             // is the index of the tile within that texture.
             const textureId = layer[index * 2];
             const tile = layer[index * 2 + 1];

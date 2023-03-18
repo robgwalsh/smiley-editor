@@ -2,9 +2,7 @@ import { MenuItem } from '@mui/material';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { EditorState } from '../../model/EditorState';
-import { convertMapStateToFile } from '../../model/map/converters';
-import { useMapData } from '../../model/map/MapData';
-import { loadMap } from '../../store/reducers/editor-slice';
+import { loadMapAsync } from '../../store/actrions/loadMapAsync';
 import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
 import { LayerPicker } from '../layers/LayerPicker';
 import { ZoomSlider } from './ZoomSlider';
@@ -13,11 +11,12 @@ export function MainMenu() {
 
     const state: EditorState = useAppSelector(state => state.editor);
     const dispatch = useAppDispatch();
-    const mapData = useMapData();
 
     const handleLoad = async () => {
         const file: TextFile = await HtmlUtils.promptToLoadTextFile(".smh");
-        dispatch(loadMap(file));
+        if (file) {
+            dispatch(loadMapAsync(file));
+        }
     };
 
     const handleSave = async () => {
@@ -42,11 +41,6 @@ export function MainMenu() {
         };
 
         const file = await (window as any).showSaveFilePicker(opts);
-
-
-
-
-        //const result = await (window as any).chooseFileSystemEntries({ type: "save-file" });
 
         if (file) {
 

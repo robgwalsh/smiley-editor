@@ -1,13 +1,12 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { EditorState, initialEditorState } from "../../model/EditorState";
 import { Vector } from "../../model/Vector";
-import { loadMapImpl } from "./loadMap"
+import { loadMapAsync } from "../actrions/loadMapAsync"
 
 export const editorSlice = createSlice({
     name: "editor",
     initialState: initialEditorState(),
     reducers: {
-        loadMap: loadMapImpl,
         setViewportSize: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
             state.viewport.width = action.payload.x;
             state.viewport.height = action.payload.y;
@@ -42,8 +41,25 @@ export const editorSlice = createSlice({
             }
         },
     },
+    extraReducers: (builder) => {
+        builder
+            .addCase(loadMapAsync.pending, (state, action) => {
+                state.isLoadingMap = true;
+            })
+            .addCase(loadMapAsync.fulfilled, (state, action) => {
+                state.isLoadingMap = false;
+                state.map = action.payload;
+                state.activeLayerName = state.map.visualLayers[0].name;
+                state.selectedTextureName = state.map.header.textures[0].name;
+                state.selectedTextureIndex = 0;
+            })
+            .addCase(loadMapAsync.rejected, (state, action) => {
+                state.isLoadingMap = false;
+                alert(`ERROR IN PROGRAM ${action.error.message}`);
+            });
+    },
 });
 
-export const { loadMap, setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading } = editorSlice.actions;
+export const { setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading } = editorSlice.actions;
 
 export default editorSlice.reducer;

@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
-import { LayerState, LayerType } from "../../model/map/MapState";
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { IconButton } from "@mui/material";
-import { MapFileTexture } from "../../model/map/MapFile";
 import Typography from "@mui/material/Typography";
-
-interface TextureSelection {
-    texture: MapFileTexture;
-    index: number;
-}
 
 /**
  * UI for selecting tiles from a texture for placing on the active map layer.
@@ -19,12 +12,8 @@ interface TextureSelection {
 export function TilePicker() {
 
     const state: EditorState = useAppSelector(state => state.editor);
-    // const [textureSelection, setTextureSelection] = useState<TextureSelection>({
-    //     texture: state.map.header.textures[0],
-    //     index: 0
-    // });
 
-    if (!state.map)
+    if (!state.map || !state.selectedTextureName)
         return (<></>)
 
     // const activeLayer = getActiveLayer(state);
@@ -34,28 +23,23 @@ export function TilePicker() {
     const selectedTexture = state.map.header.textures.find(t=>t.name === state.selectedTextureName);
 
     const handleLeft = () => {
-
+        // const i = state.map.header.textures.indexOf(selectedTexture);
+        alert("TODO: previous image");
     };
 
     const handleRight = () => {
-
+        alert("TODO: next image");
     };
-
-    // if (activeLayer.layer === LayerType.Visual) {
-    //     // TODO: special cases for walk/item/enemy vs visual ?
-    // }
-
-
 
     // TODO: buttons to cycle through images in the texture, if there is more than 1
     return (
         <div>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <IconButton onClick={handleLeft}>
                     <ArrowLeftIcon />
                 </IconButton>
 
-                <Typography>{state.selectedTextureName} (${state.selectedTextureIndex + 1} / {selectedTexture.tilesetPaths.length})</Typography>
+                <Typography>{state.selectedTextureName} ({state.selectedTextureIndex + 1} / {selectedTexture.tilesetPaths.length})</Typography>
 
                 <IconButton onClick={handleRight}>
                     <ArrowRightIcon />
