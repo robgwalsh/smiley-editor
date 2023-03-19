@@ -40,11 +40,10 @@ export const editorSlice = createSlice({
             const newZoom = Math.min(1, Math.max(.05, state.zoom * scaleFactor));
             if (newZoom !== state.zoom) {
                 // Center the viewport around the mouse position.
-                // TODO: doesnt work yet :(
-                // const mouseP = new Vector(state.mouseX, state.mouseY);
-                // const delta = mouseP.subVector(mouseP.multScalar(newZoom / state.viewport.zoom));
-                // state.viewport.x = state.viewport.x - delta.x;
-                // state.viewport.y = state.viewport.y - delta.y;
+                const mouseP = new Vector(state.mouseX + state.viewport.x, state.mouseY + state.viewport.y);
+                const delta = mouseP.subVector(mouseP.multScalar(newZoom / state.zoom));
+                state.viewport.x = state.viewport.x - delta.x;
+                state.viewport.y = state.viewport.y - delta.y;
                 state.zoom = newZoom;
             }
         },

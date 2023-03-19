@@ -47,6 +47,9 @@ export class MapEventHandler {
         } else {
 
         }
+
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     private registerEvents() {
