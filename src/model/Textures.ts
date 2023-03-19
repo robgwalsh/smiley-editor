@@ -50,7 +50,8 @@ export class Texture {
         cx: CanvasRenderingContext2D,
         tile: number,
         x: number,
-        y: number) {
+        y: number,
+        zoom: number) {
 
         if (this.info.textureType === TextureType.Fringe) {
             // TODO:
@@ -72,8 +73,9 @@ export class Texture {
         cx.drawImage(
             image,
             tileX, tileY,   // source x, y
-            64, 64,         // source width,height
+            this.info.tileWidth, this.info.tileHeight,         // source width,height
             x, y,           // destination x, y
-            64, 64);        // destination width, height
+            this.info.tileWidth * zoom, this.info.tileHeight * zoom // destination width, height
+        );
     }
 }

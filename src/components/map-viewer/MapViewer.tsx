@@ -61,14 +61,14 @@ export function MapViewer() {
     useEffect(() => {
         if (state.map && canvasRef.current) {
             const cx: CanvasRenderingContext2D = canvasRef.current.getContext('2d');
-            cx.imageSmoothingEnabled = false;
-            cx.transform(
-                state.zoom,  // x scaling
-                0,           // x skewing
-                0,           // y skewing
-                state.zoom,  // y scaling
-                0,           // x offset
-                0);          // y offset
+            // cx.imageSmoothingEnabled = false;
+            // cx.transform(
+            //     state.zoom,  // x scaling
+            //     0,           // x skewing
+            //     0,           // y skewing
+            //     state.zoom,  // y scaling
+            //     0,           // x offset
+            //     0);          // y offset
             render(cx, state, mapData);
         }
     });
@@ -111,14 +111,14 @@ function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: In
     const tileWidth = state.map.header.tileWidth;
     const tileHeight = state.map.header.tileHeight;
 
-    const leftTile = Math.max(0, Math.round(vp.x / state.zoom / tileWidth));
-    const rightTile = Math.min(state.map.header.width - 1, Math.round((vp.x + vp.width) / state.zoom / tileWidth));
-    const topTile = Math.max(0, Math.round(vp.y / state.zoom / tileHeight));
-    const bottomTile = Math.min(state.map.header.height - 1, Math.round((vp.y + vp.height) / state.zoom / tileHeight));
+    const leftTile = Math.max(0, Math.floor(vp.x / state.zoom / tileWidth)) - 1;
+    const rightTile = Math.min(state.map.header.width - 1, Math.ceil((vp.x + vp.width) / state.zoom / tileWidth));
+    const topTile = Math.max(0, Math.floor(vp.y / state.zoom / tileHeight)) - 1;
+    const bottomTile = Math.min(state.map.header.height - 1, Math.ceil((vp.y + vp.height) / state.zoom / tileHeight));
 
-    for (let x = leftTile; x <= rightTile; x++) {
-        for (let y = topTile; y <= bottomTile; y++) {
-            const index = y * state.map.header.width + x;
+    for (let tileX = leftTile; tileX <= rightTile; tileX++) {
+        for (let tileY = topTile; tileY <= bottomTile; tileY++) {
+            const index = tileY * state.map.header.width + tileX;
 
             // Each cell in the matrix has 2 int16s: the first is the id of the texture, the second
             // is the index of the tile within that texture.
@@ -127,12 +127,14 @@ function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: In
             if (tile > 1) {
                 const textureInfo = state.map.header.textures.find(t => t.id === textureId);
                 if (!textureInfo)
-                    throw new MapError(`${layerType} layer ${x}, ${y} points to texture ${textureId} which doesn't exist`);
+                    throw new MapError(`${layerType} layer ${tileX}, ${tileY} points to texture ${textureId} which doesn't exist`);
 
                 const texture: Texture = Textures.getTexture(state.map.header.textures[textureId].name);
                 texture.drawTile(cx, tile,
-                    x * tileWidth - vp.x,
-                    y * tileHeight - vp.y);
+                    state.zoom * (tileX * tileWidth) - vp.x,
+                    state.zoom * (tileY * tileHeight) - vp.y,
+                    state.zoom
+                );
             }
         }
     }

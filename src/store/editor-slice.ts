@@ -16,8 +16,8 @@ export const editorSlice = createSlice({
             state.viewport.y = action.payload.y;
         },
         pan: (state: Draft<EditorState>, action: PayloadAction<Vector>) => {
-            state.viewport.x = Math.max(0, state.viewport.x + action.payload.x);
-            state.viewport.y = Math.max(0, state.viewport.y + action.payload.y);
+            state.viewport.x = state.viewport.x + action.payload.x;
+            state.viewport.y = state.viewport.y + action.payload.y;
         },
         setActiveLayerName: (state: Draft<EditorState>, action: PayloadAction<string>) => {
             state.activeLayerName = action.payload;
@@ -37,7 +37,7 @@ export const editorSlice = createSlice({
         },
         zoomAtMouse: (state: Draft<EditorState>, action: PayloadAction<boolean>) => {
             const scaleFactor = action.payload ? 1.15 : 0.87;
-            const newZoom = Math.min(1, Math.max(.15, state.zoom * scaleFactor));
+            const newZoom = Math.min(1, Math.max(.05, state.zoom * scaleFactor));
             if (newZoom !== state.zoom) {
                 // Center the viewport around the mouse position.
                 // TODO: doesnt work yet :(

@@ -10,7 +10,7 @@ export function ZoomSlider() {
 
     const dispatch = useAppDispatch();
 
-    const min = 0.15;
+    const min = 0.05;
     const max = 1;
     const step = .05;
 
