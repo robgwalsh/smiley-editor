@@ -1,5 +1,16 @@
 import { Vector } from "../model/Vector";
 
+export enum MouseButton {
+    Left,
+    Middle,
+    Right
+}
+
+export interface TextFile {
+    name: string;
+    contents: string;
+}
+
 export class HtmlUtils {
     /**
      * Saves the contents of the given canvas to a .png
@@ -251,15 +262,4 @@ export class HtmlUtils {
             default: return MouseButton.Left;
         }
     }
-}
-
-export enum MouseButton {
-    Left,
-    Middle,
-    Right
-}
-
-export interface TextFile {
-    name: string;
-    contents: string;
 }

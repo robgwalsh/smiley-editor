@@ -5,6 +5,8 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { useDispatch } from "react-redux";
+import { setSelectedTexture } from "../../store/editor-slice";
 
 /**
  * UI for selecting tiles from a texture for placing on the active map layer.
@@ -12,6 +14,7 @@ import Typography from "@mui/material/Typography";
 export function TilePicker() {
 
     const state: EditorState = useAppSelector(state => state.editor);
+    const dispatch = useDispatch();
 
     if (!state.map || !state.selectedTextureName)
         return (<></>)
@@ -20,15 +23,26 @@ export function TilePicker() {
     // if (!activeLayer)
     //     return (<></>)
 
-    const selectedTexture = state.map.header.textures.find(t=>t.name === state.selectedTextureName);
+    const selectedTexture = state.map.header.textures.find(t => t.name === state.selectedTextureName);
 
     const handleLeft = () => {
-        // const i = state.map.header.textures.indexOf(selectedTexture);
-        alert("TODO: previous image");
+        if (state.selectedTextureIndex > 0) {
+            dispatch(setSelectedTexture([state.selectedTextureName, state.selectedTextureIndex - 1]));
+        } else {
+            let i = state.map.header.textures.indexOf(selectedTexture);
+            i = i === 0 ? state.map.header.textures.length - 1 : i - 1;
+            dispatch(setSelectedTexture([state.map.header.textures[i].name, 0]));
+        }
     };
 
     const handleRight = () => {
-        alert("TODO: next image");
+        if (state.selectedTextureIndex < selectedTexture.tilesetPaths.length - 1) {
+            dispatch(setSelectedTexture([state.selectedTextureName, state.selectedTextureIndex + 1]));
+        } else {
+            let i = state.map.header.textures.indexOf(selectedTexture);
+            i = i === state.map.header.textures.length - 1 ? 0 : i + 1;
+            dispatch(setSelectedTexture([state.map.header.textures[i].name, 0]));
+        }
     };
 
     // TODO: buttons to cycle through images in the texture, if there is more than 1
@@ -39,7 +53,9 @@ export function TilePicker() {
                     <ArrowLeftIcon />
                 </IconButton>
 
-                <Typography>{state.selectedTextureName} ({state.selectedTextureIndex + 1} / {selectedTexture.tilesetPaths.length})</Typography>
+                <Typography sx={{ width: "110px", textAlign: "center" }}>
+                    {state.selectedTextureName} ({state.selectedTextureIndex + 1} / {selectedTexture.tilesetPaths.length})
+                </Typography>
 
                 <IconButton onClick={handleRight}>
                     <ArrowRightIcon />

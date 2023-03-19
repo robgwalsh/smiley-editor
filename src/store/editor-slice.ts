@@ -1,5 +1,6 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { EditorState, initialEditorState } from "../model/EditorState";
+import { MapFileTexture } from "../model/map/MapFile";
 import { Vector } from "../model/Vector";
 import { loadMapAsync } from "./actions/loadMapAsync"
 
@@ -47,6 +48,10 @@ export const editorSlice = createSlice({
                 state.zoom = newZoom;
             }
         },
+        setSelectedTexture: (state: Draft<EditorState>, action: PayloadAction<[string, number]>) => {
+            state.selectedTextureName = action.payload[0];
+            state.selectedTextureIndex = action.payload[1];
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -67,6 +72,6 @@ export const editorSlice = createSlice({
     },
 });
 
-export const { setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading, setViewportOffset, pan } = editorSlice.actions;
+export const { setViewportSize, setActiveLayerName, setZoom, setMousePosition, setMouseOnMap, zoomAtMouse, setIsMapLoading, setViewportOffset, pan, setSelectedTexture } = editorSlice.actions;
 
 export default editorSlice.reducer;
