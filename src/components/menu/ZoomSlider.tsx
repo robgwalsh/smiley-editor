@@ -2,7 +2,7 @@ import { Button, Input, MenuItem, Slider } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
-import { setZoom } from "../../store/reducers/editor-slice";
+import { setZoom } from "../../store/editor-slice";
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 
@@ -10,7 +10,7 @@ export function ZoomSlider() {
 
     const dispatch = useAppDispatch();
 
-    const min = 0.15;
+    const min = 0.05;
     const max = 1;
     const step = .05;
 
@@ -21,9 +21,9 @@ export function ZoomSlider() {
     };
 
     const handleBlur = () => {
-        if (state.viewport.zoom < min) {
+        if (state.zoom < min) {
             dispatch(setZoom(min));
-        } else if (state.viewport.zoom > max) {
+        } else if (state.zoom > max) {
             dispatch(setZoom(max));
         }
     };
@@ -32,14 +32,14 @@ export function ZoomSlider() {
         <div style={{ display: "flex", alignItems: "center" }}>
             <MenuItem
                 style={{ padding: "5px", borderRadius: "5px", marginRight: "5px" }}
-                onClick={e => dispatch(setZoom(Math.max(min, state.viewport.zoom - step)))}
+                onClick={e => dispatch(setZoom(Math.max(min, state.zoom - step)))}
             >
                 <ZoomOutIcon />
             </MenuItem>
             <div style={{ width: "250px" }}>
                 <Slider
                     style={{ marginTop: "5px" }}
-                    value={state.viewport.zoom}
+                    value={state.zoom}
                     onChange={(e, newValue: number) => dispatch(setZoom(newValue))}
                     min={min}
                     max={max}
@@ -48,13 +48,13 @@ export function ZoomSlider() {
             </div>
             <MenuItem
                 style={{ padding: "5px", marginLeft: "15px", borderRadius: "5px" }}
-                onClick={e => dispatch(setZoom(Math.min(max, state.viewport.zoom + step)))}
+                onClick={e => dispatch(setZoom(Math.min(max, state.zoom + step)))}
             >
                 <ZoomInIcon />
             </MenuItem>
             <div style={{ width: "50px" }}>
                 <Input
-                    value={state.viewport.zoom}
+                    value={state.zoom}
                     size="small"
                     onChange={handleInputChange}
                     onBlur={handleBlur}

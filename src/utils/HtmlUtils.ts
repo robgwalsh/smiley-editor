@@ -1,3 +1,5 @@
+import { Vector } from "../model/Vector";
+
 export class HtmlUtils {
     /**
      * Saves the contents of the given canvas to a .png
@@ -232,6 +234,14 @@ export class HtmlUtils {
         textarea.setSelectionRange(0, 99999);
         document.execCommand('copy');
         document.body.removeChild(textarea);
+    }
+
+    public static getMousePosition(e: PointerEvent): Vector {
+        const box: DOMRect = (e.currentTarget as any).getBoundingClientRect();
+        return new Vector(
+            e.clientX - box.left,
+            e.clientY - box.top
+        );
     }
 
     public static getMouseButton(e: PointerEvent): MouseButton {

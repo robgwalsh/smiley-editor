@@ -12,9 +12,21 @@ export interface MapFile {
 }
 
 export interface MapFileHeader {
+    /**
+     * Width of the map in tiles
+     */
     width: number;
+    /**
+     * Height of the map in tiles
+     */
     height: number;
+    /**
+     * Pixel width of each tile
+     */
     tileWidth: number;
+    /**
+     * Pixel height of each tile
+     */
     tileHeight: number;
     song: string;
     idStart: number;

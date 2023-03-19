@@ -3,7 +3,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
-import { setActiveLayerName } from "../../store/reducers/editor-slice";
+import { setActiveLayerName } from "../../store/editor-slice";
 import { LayerPickerButton } from "./LayerPickerButton";
 
 export function LayerPicker() {

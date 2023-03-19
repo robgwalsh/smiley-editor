@@ -1,5 +1,4 @@
 import { MapState } from "./map/MapState";
-import { Viewport } from "./Viewport";
 
 export interface EditorState {
     map: MapState;
@@ -8,11 +7,25 @@ export interface EditorState {
     selectedTileIndex: number;
     selectedTextureName: string;
     selectedTextureIndex: number;
-    viewport: Viewport;
+    /**
+     * Current viewport, in screen pixels.
+     */
+    viewport: Box;
+    /**
+     * Percentage zoom (1 == 100%, where a 64x64 tile takes up 64x64 screen pixels).
+     */
+    zoom: number;
     revision: number;
     mouseX: number;
     mouseY: number;
     mouseOnMap: boolean;
+}
+
+export interface Box {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 }
 
 export function initialEditorState(): EditorState {
@@ -27,12 +40,7 @@ export function initialEditorState(): EditorState {
         mouseY: 0,
         selectedTileIndex: 1,
         revision: 0,
-        viewport: {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-            zoom: 1
-        }
+        viewport: { x: 0, y: 0, width: 0, height: 0 },
+        zoom: 1
     };
 }
