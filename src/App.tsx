@@ -1,6 +1,7 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
 import { Footer } from './components/Footer';
+import { EventLayerPicker } from './components/layers/EventLayerPicker';
 import { TilePicker } from './components/layers/TilePicker';
 import { MapViewer } from './components/map-viewer/MapViewer';
 import { MainMenu } from './components/menu/MainMenu';
@@ -43,8 +44,11 @@ function App() {
 
                     <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding, width: "500px" }}>
                         <div style={{ flex: 1 }}>
-                            {/* TODO: show special picker for id/variable ("event") layer */}
-                            <TilePicker />
+                            {
+                                state.activeLayerName === "Event"
+                                    ? <EventLayerPicker />
+                                    : <TilePicker />
+                            }
                         </div>
                     </div>
                 </div>

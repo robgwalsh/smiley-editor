@@ -48,18 +48,20 @@ export function TilePicker() {
     // TODO: buttons to cycle through images in the texture, if there is more than 1
     return (
         <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <IconButton onClick={handleLeft}>
-                    <ArrowLeftIcon />
-                </IconButton>
-
-                <Typography sx={{ width: "110px", textAlign: "center" }}>
-                    {state.selectedTextureName} ({state.selectedTextureIndex + 1} / {selectedTexture.tilesetPaths.length})
-                </Typography>
-
-                <IconButton onClick={handleRight}>
-                    <ArrowRightIcon />
-                </IconButton>
+            <div style={{ display: "flex" }}>
+                <div style={{ flex: 1 }} />
+                <div style={{ flex: 0, display: "flex", alignItems: "center", gap: "10px" }}>
+                    <IconButton onClick={handleLeft}>
+                        <ArrowLeftIcon />
+                    </IconButton>
+                    <Typography sx={{ width: "110px", textAlign: "center" }}>
+                        {state.selectedTextureName} ({state.selectedTextureIndex + 1} / {selectedTexture.tilesetPaths.length})
+                    </Typography>
+                    <IconButton onClick={handleRight}>
+                        <ArrowRightIcon />
+                    </IconButton>
+                </div>
+                <div style={{ flex: 1 }} />
             </div>
             <div>
                 <img

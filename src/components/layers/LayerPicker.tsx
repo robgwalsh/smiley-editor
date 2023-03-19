@@ -1,10 +1,10 @@
-import { ToggleButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
+import { LayerState } from "../../model/map/MapState";
 import { setActiveLayerName } from "../../store/editor-slice";
-import { LayerPickerButton } from "./LayerPickerButton";
 
 export function LayerPicker() {
 
@@ -20,6 +20,14 @@ export function LayerPicker() {
         }
     }
 
+    const layers: LayerState[] = [
+        ...state.map.visualLayers,
+        state.map.walkLayer,
+        state.map.itemLayer,
+        state.map.enemyLayer,
+        state.map.variableLayer
+    ];
+
     return (
         <ToggleButtonGroup
             color="primary"
@@ -29,13 +37,14 @@ export function LayerPicker() {
             onChange={handleSelection}
             aria-label="Platform"
         >
-            {state.map.visualLayers.map(layer => <LayerPickerButton layer={layer} key={layer.name} />)}
-            <LayerPickerButton layer={state.map.walkLayer} key={state.map.walkLayer.name} />
-            <LayerPickerButton layer={state.map.itemLayer} key={state.map.itemLayer.name} />
-            <LayerPickerButton layer={state.map.enemyLayer} key={state.map.enemyLayer.name} />
-
-            {/* TODO: "event" picker that represents both id and variable */}
-            <LayerPickerButton layer={state.map.variableLayer} key={state.map.variableLayer.name} />
+            {layers.map(layer => (
+                <ToggleButton
+                    key={layer.name}
+                    value={layer.name}
+                >
+                    {layer.name}
+                </ToggleButton>
+            ))}
         </ToggleButtonGroup>
     );
 }

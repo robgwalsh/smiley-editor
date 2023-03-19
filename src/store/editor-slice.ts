@@ -1,6 +1,5 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { EditorState, initialEditorState } from "../model/EditorState";
-import { MapFileTexture } from "../model/map/MapFile";
 import { Vector } from "../model/Vector";
 import { loadMapAsync } from "./actions/loadMapAsync"
 
@@ -22,6 +21,17 @@ export const editorSlice = createSlice({
         },
         setActiveLayerName: (state: Draft<EditorState>, action: PayloadAction<string>) => {
             state.activeLayerName = action.payload;
+            if (state.activeLayerName == "main") {
+                // hack!
+                state.selectedTextureName = "Visual 1";
+                state.selectedTextureIndex = 0;
+            } else {
+                const texture = state.map.header.textures.find(t => t.name.toLocaleLowerCase() === state.activeLayerName.toLocaleLowerCase());
+                if (texture) {
+                    state.selectedTextureName = texture.name;
+                    state.selectedTextureIndex = 0;
+                }
+            }
         },
         setZoom: (state: Draft<EditorState>, action: PayloadAction<number>) => {
             state.zoom = action.payload;

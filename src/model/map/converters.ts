@@ -145,7 +145,7 @@ function createDefaultState(header: MapFileHeader): MapState {
         },
         variableLayer: {
             layer: LayerType.Variable,
-            name: "Variable",
+            name: "Event",
             visible: true
         },
         walkLayer: {
