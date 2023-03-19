@@ -23,7 +23,7 @@ export const editorSlice = createSlice({
             state.activeLayerName = action.payload;
             if (state.activeLayerName == "main") {
                 // hack!
-                state.selectedTextureName = "Visual 1";
+                state.selectedTextureName = state.map.header.textures[0].name;
                 state.selectedTextureIndex = 0;
             } else {
                 const texture = state.map.header.textures.find(t => t.name.toLocaleLowerCase() === state.activeLayerName.toLocaleLowerCase());

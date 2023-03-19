@@ -1,11 +1,10 @@
 import { MenuItem } from '@mui/material';
 import React from 'react';
-import { batch } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { EditorState } from '../../model/EditorState';
-import { Vector } from '../../model/Vector';
+import { convertMapStateToFile } from '../../model/map/converters';
+import { getMapData } from '../../model/map/MapData';
 import { loadMapAsync } from '../../store/actions/loadMapAsync';
-import { setViewportOffset, setZoom } from '../../store/editor-slice';
 import { HtmlUtils, TextFile } from '../../utils/HtmlUtils';
 import { LayerPicker } from '../layers/LayerPicker';
 import { ZoomSlider } from './ZoomSlider';
@@ -13,7 +12,12 @@ import { ZoomSlider } from './ZoomSlider';
 export function MainMenu() {
 
     const state: EditorState = useAppSelector(state => state.editor);
+    const mapData = getMapData();
     const dispatch = useAppDispatch();
+
+    const handleNew = () => {
+        alert("TODO:");
+    }
 
     const handleLoad = async () => {
         const file: TextFile = await HtmlUtils.promptToLoadTextFile(".smh");
@@ -45,9 +49,9 @@ export function MainMenu() {
 
         const file = await (window as any).showSaveFilePicker(opts);
 
-        if (file) {
+        // if (file) {
 
-        }
+        // }
 
         //const file: File = await HtmlUtils.promptUserForFile(".smh");
 
@@ -59,17 +63,18 @@ export function MainMenu() {
         // }
     };
 
-    const handleResetViewport = () => {
-        dispatch(setViewportOffset(new Vector(0, 0)));
-        dispatch(setZoom(1));
-    };
+    const handleDownload = async () => {
+        const json: string = JSON.stringify(convertMapStateToFile(state.map, mapData), null, 4);
+        await HtmlUtils.downloadTextAsFile(json, "map.smh");
+    }
 
     return (
         <div style={{ display: "flex", alignItems: "center", height: "50px" }}>
 
+            <MenuItem onClick={handleNew}>New</MenuItem>
             <MenuItem onClick={handleLoad}>Load</MenuItem>
             <MenuItem onClick={handleSave}>Save</MenuItem>
-            <MenuItem onClick={handleResetViewport}>Reset Viewport</MenuItem>
+            <MenuItem onClick={handleDownload}>Download</MenuItem>
 
             {state.map && <ZoomSlider />}
 

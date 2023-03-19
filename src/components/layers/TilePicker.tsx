@@ -64,7 +64,7 @@ export function TilePicker() {
                 </div>
                 <div style={{ flex: 1 }} />
             </div>
-            <div>
+            <div style={{ border: "1px solid #232323" }}>
                 <img
                     width={500}
                     style={{ objectFit: "contain" }}

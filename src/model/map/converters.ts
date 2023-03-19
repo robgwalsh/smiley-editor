@@ -83,7 +83,7 @@ export function convertLegacyFileToState(legacyFileContents: string): [MapState,
     });
     state.visualLayers.push({
         layer: LayerType.Visual,
-        name: "Visual 1",
+        name: "Vis1",
         visible: true
     })
 
@@ -163,7 +163,7 @@ function createDefaultState(header: MapFileHeader): MapState {
  */
 function createCoreTextures(): MapFileTexture[] {
     return [
-        createCoreTexture(0, "visual 1", ["https://smiley-editor.s3.amazonaws.com/mainlayer.png"]),
+        createCoreTexture(0, "vis1", ["https://smiley-editor.s3.amazonaws.com/mainlayer.png"]),
         createCoreTexture(1, "walk", ["https://smiley-editor.s3.amazonaws.com/walklayer.PNG"]),
         createCoreTexture(2, "item", ["https://smiley-editor.s3.amazonaws.com/itemlayer1.png", "https://smiley-editor.s3.amazonaws.com/itemlayer2.png"]),
         createCoreTexture(3, "enemy", ["https://smiley-editor.s3.amazonaws.com/enemylayer.PNG"])

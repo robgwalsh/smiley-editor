@@ -18,7 +18,6 @@ export class MapEventHandler {
 
         if (this._dragPoint) {
             const diff = this._dragPoint.subVector(p);
-            console.log(`right click move: ${diff.x}, ${diff.y}`);
             this._dragPoint = p;
             this._dispatch(pan(diff));
         }
@@ -31,7 +30,6 @@ export class MapEventHandler {
         const p = HtmlUtils.getMousePosition(e);
 
         if (button === MouseButton.Right) {
-            console.log(`right mouse down: ${p.x}, ${p.y}`);
             this._dragPoint = p;
         } else {
 
@@ -42,7 +40,6 @@ export class MapEventHandler {
         const p = HtmlUtils.getMousePosition(e);
 
         if (this._dragPoint) {
-            console.log('right mouse up');
             this._dragPoint = null;
         } else {
 

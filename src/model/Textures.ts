@@ -63,7 +63,7 @@ export class Texture {
         const n = (tilesWide * tilesHigh);
         const imageIndex = Math.floor(tile / n);
         const tileX = (tile % tilesWide) * this.info.tileWidth;
-        const tileY = Math.round((tile % n) / tilesHigh) * this.info.tileHeight;
+        const tileY = Math.floor((tile % n) / tilesHigh) * this.info.tileHeight;
 
         const image = this._images[imageIndex];
         if (!image) {

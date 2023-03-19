@@ -5,6 +5,7 @@ import { useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
 import { LayerState } from "../../model/map/MapState";
 import { setActiveLayerName } from "../../store/editor-slice";
+import { StateUtils } from "../../utils/StateUtils";
 
 export function LayerPicker() {
 
@@ -20,13 +21,7 @@ export function LayerPicker() {
         }
     }
 
-    const layers: LayerState[] = [
-        ...state.map.visualLayers,
-        state.map.walkLayer,
-        state.map.itemLayer,
-        state.map.enemyLayer,
-        state.map.variableLayer
-    ];
+    const layers: LayerState[] = StateUtils.getLayers(state);
 
     return (
         <ToggleButtonGroup

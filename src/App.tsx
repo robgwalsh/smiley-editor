@@ -38,7 +38,16 @@ function App() {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", flex: 1, margin: `0 ${padding} 0 ${padding}` }}>
-                    <div style={{ flex: 1, height: "100%", backgroundColor: "#191919", borderRadius: "6px" }}>
+                    <div
+                        style={{
+                            flex: 1,
+                            height: "100%",
+                            backgroundColor: "#191919",
+                            overflow: "hidden",
+                            borderRadius: "6px",
+                            border: "1px solid #232323"
+                        }}
+                    >
                         {state.map ? <MapViewer /> : <Welcome />}
                     </div>
 

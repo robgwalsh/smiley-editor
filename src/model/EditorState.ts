@@ -1,6 +1,6 @@
-import { MapState } from "./map/MapState";
+import { LayerState, MapState } from "./map/MapState";
 
-export interface EditorState {
+export class EditorState {
     map: MapState;
     isLoadingMap: boolean;
     activeLayerName;

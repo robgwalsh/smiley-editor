@@ -5,7 +5,7 @@ export interface MapData {
 
 let mapData: MapData;
 
-export function useMapData(): MapData {
+export function getMapData(): MapData {
     return mapData;
 }
 

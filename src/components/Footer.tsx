@@ -1,6 +1,7 @@
 import React from "react"
 import { useAppSelector } from "../hooks";
 import { EditorState } from "../model/EditorState";
+import { StateUtils } from "../utils/StateUtils";
 
 export function Footer() {
 
@@ -9,8 +10,7 @@ export function Footer() {
     if (!state.map)
         return <div style={{ height: "35px" }}></div>
 
-    const mouseCellX = Math.floor((state.mouseX + state.viewport.x) / state.zoom / state.map.header.tileWidth);
-    const mouseCellY = Math.floor((state.mouseY + state.viewport.y) / state.zoom / state.map.header.tileHeight);
+    const cell = StateUtils.getMousedOverCell(state);
 
     const labelStyle = {
         fontWeight: 400,
@@ -24,12 +24,21 @@ export function Footer() {
             backgroundColor: "#121212",
             padding: "15px 15px 15px 0",
             height: "35px",
-            gap: "25px"
+            gap: "15px"
         }}>
-            <label style={{...labelStyle, width: "110px" }}>cell: {mouseCellX}, {mouseCellY}</label>
-            <label style={{...labelStyle, width: "140px" }}>mouse: {Math.round(state.mouseX)}, {Math.round(state.mouseY)}</label>
-            {/* <label style={{...labelStyle, width: "160px" }}>viewport: {Math.round(state.viewport.x)}, {Math.round(state.viewport.y)}</label>
-            <label style={{...labelStyle, width: "70px" }}>{Math.round(state.viewport.width)}x{Math.round(state.viewport.height)}</label> */}
+            <label style={{ ...labelStyle, width: "110px" }}>cell: {cell.x}, {cell.y}</label>
+            {/* <label style={{ ...labelStyle, width: "140px" }}>mouse: {Math.round(state.mouseX)}, {Math.round(state.mouseY)}</label> */}
+
+            {StateUtils.getLayers(state).map(
+                layer => {
+                    const v = StateUtils.getLayerValue(state, layer.name, cell.x, cell.y);
+                    return (
+                        <label key={layer.name} style={{ ...labelStyle, width: "90px" }}>
+                            {layer.name} {v[0]}-{v[1]}
+                        </label>
+                    );
+                }
+            )}
         </div>
     )
 }
