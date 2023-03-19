@@ -104,9 +104,9 @@ function renderLayer(cx: CanvasRenderingContext2D, state: EditorState, layer: In
     const tileWidth = state.map.header.tileWidth;
     const tileHeight = state.map.header.tileHeight;
 
-    const leftTile = Math.max(0, Math.floor(vp.x / state.zoom / tileWidth)) - 1;
+    const leftTile = Math.max(0, Math.floor(vp.x / state.zoom / tileWidth) - 1);
     const rightTile = Math.min(state.map.header.width - 1, Math.ceil((vp.x + vp.width) / state.zoom / tileWidth));
-    const topTile = Math.max(0, Math.floor(vp.y / state.zoom / tileHeight)) - 1;
+    const topTile = Math.max(0, Math.floor(vp.y / state.zoom / tileHeight) - 1);
     const bottomTile = Math.min(state.map.header.height - 1, Math.ceil((vp.y + vp.height) / state.zoom / tileHeight));
 
     for (let tileX = leftTile; tileX <= rightTile; tileX++) {
