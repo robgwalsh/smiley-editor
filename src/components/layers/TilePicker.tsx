@@ -7,6 +7,7 @@ import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
 import { setSelectedTexture } from "../../store/editor-slice";
+import { MapFileTexture } from "../../model/map/MapFile";
 
 /**
  * UI for selecting tiles from a texture for placing on the active map layer.
@@ -55,7 +56,7 @@ export function TilePicker() {
                         <ArrowLeftIcon />
                     </IconButton>
                     <Typography sx={{ width: "110px", textAlign: "center" }}>
-                        {state.selectedTextureName} ({state.selectedTextureIndex + 1} / {selectedTexture.tilesetPaths.length})
+                        {getTerrainLabel(state, selectedTexture)}
                     </Typography>
                     <IconButton onClick={handleRight}>
                         <ArrowRightIcon />
@@ -72,6 +73,12 @@ export function TilePicker() {
             </div>
         </div>
     )
+}
+
+function getTerrainLabel(state: EditorState, selectedTexture: MapFileTexture): string {
+    if (selectedTexture.tilesetPaths.length === 1)
+        return state.selectedTextureName;
+    return `${state.selectedTextureName} (${state.selectedTextureIndex + 1} / ${selectedTexture.tilesetPaths.length})`;
 }
 
 // function getActiveLayer(state: EditorState): LayerState {

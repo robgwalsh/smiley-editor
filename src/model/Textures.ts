@@ -74,8 +74,8 @@ export class Texture {
             image,
             tileX, tileY,   // source x, y
             this.info.tileWidth, this.info.tileHeight,         // source width,height
-            x, y,           // destination x, y
-            this.info.tileWidth * zoom, this.info.tileHeight * zoom // destination width, height
+            Math.round(x), Math.round(y),           // destination x, y
+            Math.round(this.info.tileWidth * zoom), Math.round(this.info.tileHeight * zoom) // destination width, height
         );
     }
 }
