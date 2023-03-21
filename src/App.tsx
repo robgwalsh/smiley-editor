@@ -1,7 +1,8 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { Footer } from './components/Footer';
 import { EventLayerPicker } from './components/layers/EventLayerPicker';
-import { TilePicker } from './components/layers/TilePicker';
+import { SpritePicker } from './components/layers/SpritePicker';
+import { SpritePickerPreview } from './components/layers/SpritePickerPreview';
 import { MapViewer } from './components/map-viewer/MapViewer';
 import { MainMenu } from './components/menu/MainMenu';
 import { Welcome } from './components/Welcome';
@@ -57,14 +58,13 @@ function App() {
                         {state.map ? <MapViewer /> : <Welcome />}
                     </div>
 
-                    <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding, width: "500px" }}>
-                        <div style={{ flex: 1 }}>
-                            {
-                                state.selectedLayerName === "Event"
-                                    ? <EventLayerPicker />
-                                    : <TilePicker />
-                            }
-                        </div>
+                    <div style={{ flex: 0, marginLeft: padding, width: "500px" }}>
+                        {
+                            state.selectedLayerName === "Event"
+                                ? <EventLayerPicker />
+                                : <SpritePicker />
+                        }
+                        {/* <SpritePickerPreview /> */}
                     </div>
                 </div>
 

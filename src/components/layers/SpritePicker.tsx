@@ -8,13 +8,11 @@ import { useDispatch } from "react-redux";
 import { assignTilePickerTarget, setSelectedTexture, setTilePickerTarget } from "../../store/editor-slice";
 import { MapFileTexture } from "../../model/map/MapFile";
 import { HtmlUtils, MouseButton } from "../../utils/HtmlUtils";
-import { IVector } from "../../model/Vector";
-import { useState } from "react";
 
 /**
  * UI for selecting tiles from a texture for placing on the active map layer.
  */
-export function TilePicker() {
+export function SpritePicker() {
 
     const width = 500;
 

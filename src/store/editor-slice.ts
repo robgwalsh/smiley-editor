@@ -73,7 +73,7 @@ export const editorSlice = createSlice({
                     y: state.tilePickerGridPosition.y,
                     layerName: null,
                     textureId: selectedTexture.id,
-                    tile: (state.tilePickerGridPosition.x * state.tilePickerGridPosition.y) + state.selectedTextureIndex * (selectedTexture.width / selectedTexture.height)
+                    tile: StateUtils.getSpritePickerMousedOverSpriteIndex(state)
                 };
             }
         }

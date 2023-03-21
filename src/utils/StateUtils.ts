@@ -73,4 +73,12 @@ export class StateUtils {
     public static getSelectedTexture(state: EditorState): MapFileTexture {
         return state.map.header.textures.find(t => t.name === state.selectedTextureName);
     }
+
+    public static getSpritePickerMousedOverSpriteIndex(state: EditorState) {
+        const texture = this.getSelectedTexture(state);
+        const tilesWide = texture.width / texture.tileWidth;
+        const tilesHigh = texture.height / texture.tileHeight;
+        const n = tilesWide * tilesHigh;
+        return state.tilePickerGridPosition.y * tilesWide + state.tilePickerGridPosition.x + state.selectedTextureIndex * n;
+    }
 }
