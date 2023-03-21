@@ -1,5 +1,5 @@
 import { Vector } from "../../model/Vector";
-import { pan, setMousePosition } from "../../store/editor-slice";
+import { pan, setMapMousePosition } from "../../store/editor-slice";
 import { HtmlUtils, MouseButton } from "../../utils/HtmlUtils";
 
 /**
@@ -17,12 +17,13 @@ export class MapEventHandler {
         const p = HtmlUtils.getMousePosition(e);
 
         if (this._dragPoint) {
-            const diff = this._dragPoint.subVector(p);
-            this._dragPoint = p;
+            const oldPoint = this._dragPoint;
+            this._dragPoint = new Vector(p.x, p.y);
+            const diff = oldPoint.subVector(this._dragPoint);
             this._dispatch(pan(diff));
         }
 
-        this._dispatch(setMousePosition(p));
+        this._dispatch(setMapMousePosition(p));
     };
 
     private readonly handleMouseDown = (e: PointerEvent) => {
@@ -30,7 +31,7 @@ export class MapEventHandler {
         const p = HtmlUtils.getMousePosition(e);
 
         if (button === MouseButton.Right) {
-            this._dragPoint = p;
+            this._dragPoint = new Vector(p.x, p.y);
         } else {
 
         }

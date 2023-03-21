@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { EditorState } from "../../model/EditorState";
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
@@ -6,25 +5,32 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { setSelectedTexture } from "../../store/editor-slice";
+import { assignTilePickerTarget, setSelectedTexture, setTilePickerTarget } from "../../store/editor-slice";
 import { MapFileTexture } from "../../model/map/MapFile";
+import { HtmlUtils, MouseButton } from "../../utils/HtmlUtils";
+import { IVector } from "../../model/Vector";
+import { useState } from "react";
 
 /**
  * UI for selecting tiles from a texture for placing on the active map layer.
  */
 export function TilePicker() {
 
+    const width = 500;
+
     const state: EditorState = useAppSelector(state => state.editor);
     const dispatch = useDispatch();
 
     if (!state.map || !state.selectedTextureName)
-        return (<></>)
-
-    // const activeLayer = getActiveLayer(state);
-    // if (!activeLayer)
-    //     return (<></>)
+        return <></>;
 
     const selectedTexture = state.map.header.textures.find(t => t.name === state.selectedTextureName);
+    if (!selectedTexture)
+        return <></>;
+
+    const scale = width / selectedTexture.width;
+    const tileWidth = selectedTexture.tileWidth * scale;
+    const tileHeight = selectedTexture.tileHeight * scale;
 
     const handleLeft = () => {
         if (state.selectedTextureIndex > 0) {
@@ -46,7 +52,33 @@ export function TilePicker() {
         }
     };
 
-    // TODO: buttons to cycle through images in the texture, if there is more than 1
+    const handlePointerLeave = (e: React.PointerEvent<HTMLDivElement>) => {
+        dispatch(setTilePickerTarget(null));
+    }
+
+    const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+        const box: DOMRect = (e.currentTarget as any).getBoundingClientRect();
+        dispatch(setTilePickerTarget({
+            x: Math.floor((e.clientX - box.left) / tileWidth),
+            y: Math.floor((e.clientY - box.top) / tileHeight)
+        }));
+    }
+
+    const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        switch (HtmlUtils.getMouseButton(e.nativeEvent)) {
+            case MouseButton.Left:
+                dispatch(assignTilePickerTarget("lmb"));
+                return;
+            case MouseButton.Middle:
+                dispatch(assignTilePickerTarget("mmb"));
+                return;
+            case MouseButton.Right:
+                dispatch(assignTilePickerTarget("rmb"));
+                return;
+        }
+
+    };
+
     return (
         <div>
             <div style={{ display: "flex" }}>
@@ -64,12 +96,30 @@ export function TilePicker() {
                 </div>
                 <div style={{ flex: 1 }} />
             </div>
-            <div style={{ border: "1px solid #232323" }}>
+            <div
+                style={{ border: "1px solid #232323", position: "relative", width: `${width}px` }}
+                onPointerMove={handlePointerMove}
+                onPointerLeave={handlePointerLeave}
+                onPointerDown={handlePointerDown}
+            >
                 <img
                     width={500}
-                    style={{ objectFit: "contain" }}
+                    style={{ objectFit: "contain", position: "absolute", left: 0, top: 0 }}
                     src={selectedTexture.tilesetPaths[state.selectedTextureIndex]}
                 />
+                {state.tilePickerGridPosition &&
+                    <svg viewBox={`0 0 ${width} ${width}`} xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", left: 0, top: 0 }}>
+                        <rect
+                            x={Math.round(state.tilePickerGridPosition.x * tileWidth)}
+                            y={Math.round(state.tilePickerGridPosition.y * tileHeight)}
+                            width={tileWidth}
+                            height={tileHeight}
+                            fill="transparent"
+                            stroke="red"
+                            strokeWidth={1}
+                        />
+                    </svg>
+                }
             </div>
         </div>
     )
@@ -80,22 +130,3 @@ function getTerrainLabel(state: EditorState, selectedTexture: MapFileTexture): s
         return state.selectedTextureName;
     return `${state.selectedTextureName} (${state.selectedTextureIndex + 1} / ${selectedTexture.tilesetPaths.length})`;
 }
-
-// function getActiveLayer(state: EditorState): LayerState {
-//     switch (state.activeLayerName) {
-//         case null:
-//             return null;
-//         case state.map.idLayer.name:
-//             return state.map.idLayer;
-//         case state.map.variableLayer.name:
-//             return state.map.variableLayer;
-//         case state.map.enemyLayer.name:
-//             return state.map.enemyLayer
-//         case state.map.itemLayer.name:
-//             return state.map.itemLayer;
-//         case state.map.walkLayer:
-//             return state.map.walkLayer;
-//         default:
-//             return state.map.visualLayers.find(l => l.name === state.activeLayerName);
-//     }
-// }

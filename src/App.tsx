@@ -1,5 +1,4 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-import React from 'react';
 import { Footer } from './components/Footer';
 import { EventLayerPicker } from './components/layers/EventLayerPicker';
 import { TilePicker } from './components/layers/TilePicker';
@@ -7,6 +6,7 @@ import { MapViewer } from './components/map-viewer/MapViewer';
 import { MainMenu } from './components/menu/MainMenu';
 import { Welcome } from './components/Welcome';
 import { useAppSelector } from './hooks';
+import { KeyboardShortcuts } from './KeyboardShortcuts';
 
 const darkTheme = createTheme({
     palette: {
@@ -22,6 +22,7 @@ function App() {
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
+            <KeyboardShortcuts />
             <div style={{
                 width: "100vw",
                 height: "100vh",
@@ -37,9 +38,14 @@ function App() {
                     <MainMenu />
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", flex: 1, margin: `0 ${padding} 0 ${padding}` }}>
-                    <div
-                        style={{
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "stretch",
+                    flex: 1,
+                    margin: `0 ${padding} 0 ${padding}`
+                }}>
+                    <div style={{
                             flex: 1,
                             height: "100%",
                             backgroundColor: "#191919",
@@ -54,7 +60,7 @@ function App() {
                     <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding, width: "500px" }}>
                         <div style={{ flex: 1 }}>
                             {
-                                state.activeLayerName === "Event"
+                                state.selectedLayerName === "Event"
                                     ? <EventLayerPicker />
                                     : <TilePicker />
                             }

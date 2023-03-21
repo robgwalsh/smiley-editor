@@ -1,18 +1,22 @@
 import { Box, EditorState } from "../model/EditorState";
 import { getMapData as getMapData } from "../model/map/MapData";
+import { MapFileTexture } from "../model/map/MapFile";
 import { LayerState, LayerType } from "../model/map/MapState";
-import { Vector } from "../model/Vector";
+import { IVector } from "../model/Vector";
 
 /**
  * Utilities for deriving values from state
  */
 export class StateUtils {
 
-    public static getMousedOverCell(state: EditorState): Vector {
-        return new Vector(
-            Math.floor((state.mouseX + state.viewport.x) / state.zoom / state.map.header.tileWidth),
-            Math.floor((state.mouseY + state.viewport.y) / state.zoom / state.map.header.tileHeight)
-        );
+    public static getMousedOverCell(state: EditorState): IVector {
+        if (!state.mapMousePosition)
+            return { x: 0, y: 0 };
+
+        return {
+            x: Math.floor((state.mapMousePosition.x + state.viewport.x) / state.zoom / state.map.header.tileWidth),
+            y: Math.floor((state.mapMousePosition.y + state.viewport.y) / state.zoom / state.map.header.tileHeight)
+        };
     }
 
     /**
@@ -47,6 +51,14 @@ export class StateUtils {
         ];
     }
 
+    public static setLayerValue(state: EditorState, layerName: string, x: number, y: number, v1: number, v2: number) {
+        const mapData = getMapData();
+        const layerData = mapData.layers.get(layerName);
+        const i = (y * state.map.header.width + x) * 2;
+        layerData[i] = v1;
+        layerData[i + 1] = v2;
+    }
+
     public static getMousedOverCellScreenBox(state: EditorState): Box {
         const cell = this.getMousedOverCell(state);
 
@@ -56,5 +68,9 @@ export class StateUtils {
             width: state.map.header.tileWidth * state.zoom,
             height: state.map.header.tileHeight * state.zoom
         };
+    }
+
+    public static getSelectedTexture(state: EditorState): MapFileTexture {
+        return state.map.header.textures.find(t => t.name === state.selectedTextureName);
     }
 }

@@ -26,7 +26,7 @@ export function LayerPicker() {
     return (
         <ToggleButtonGroup
             color="primary"
-            value={state.activeLayerName}
+            value={state.selectedLayerName}
             style={{ height: "30px" }}
             exclusive
             onChange={handleSelection}

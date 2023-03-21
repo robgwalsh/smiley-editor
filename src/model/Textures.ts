@@ -1,3 +1,4 @@
+import { Box } from "./EditorState";
 import { MapFileTexture, TextureType } from "./map/MapFile";
 
 export class Textures {
@@ -46,12 +47,7 @@ export class Texture {
         return new Texture(textureInfo, images);
     }
 
-    public drawTile(
-        cx: CanvasRenderingContext2D,
-        tile: number,
-        x: number,
-        y: number,
-        zoom: number) {
+    public drawSprite(cx: CanvasRenderingContext2D, index: number, dst: Box) {
 
         if (this.info.textureType === TextureType.Fringe) {
             // TODO:
@@ -61,9 +57,9 @@ export class Texture {
         const tilesHigh = this.info.height / this.info.tileHeight
 
         const n = (tilesWide * tilesHigh);
-        const imageIndex = Math.floor(tile / n);
-        const tileX = (tile % tilesWide) * this.info.tileWidth;
-        const tileY = Math.floor((tile % n) / tilesHigh) * this.info.tileHeight;
+        const imageIndex = Math.floor(index / n);
+        const tileX = (index % tilesWide) * this.info.tileWidth;
+        const tileY = Math.floor((index % n) / tilesHigh) * this.info.tileHeight;
 
         const image = this._images[imageIndex];
         if (!image) {
@@ -72,10 +68,7 @@ export class Texture {
 
         cx.drawImage(
             image,
-            tileX, tileY,   // source x, y
-            this.info.tileWidth, this.info.tileHeight,         // source width,height
-            Math.round(x), Math.round(y),           // destination x, y
-            Math.round(this.info.tileWidth * zoom), Math.round(this.info.tileHeight * zoom) // destination width, height
-        );
+            tileX, tileY, this.info.tileWidth, this.info.tileHeight,    // source box
+            dst.x, dst.y, dst.width, dst.height);                       // target box
     }
 }

@@ -1,4 +1,9 @@
-export class Vector {
+export interface IVector {
+    x: number;
+    y: number;
+}
+
+ export class Vector implements IVector {
 
     constructor(public readonly x: number, public readonly y: number) { }
 

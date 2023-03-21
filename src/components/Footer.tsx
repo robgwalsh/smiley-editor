@@ -34,7 +34,7 @@ export function Footer() {
                     const v = StateUtils.getLayerValue(state, layer.name, cell.x, cell.y);
                     return (
                         <label key={layer.name} style={{ ...labelStyle, width: "90px" }}>
-                            {layer.name} {v[0]}-{v[1]}
+                            {layer.name} {v[0]}, {v[1]}
                         </label>
                     );
                 }

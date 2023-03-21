@@ -1,4 +1,4 @@
-import { Vector } from "../model/Vector";
+import { IVector } from "../model/Vector";
 
 export enum MouseButton {
     Left,
@@ -247,12 +247,12 @@ export class HtmlUtils {
         document.body.removeChild(textarea);
     }
 
-    public static getMousePosition(e: PointerEvent): Vector {
+    public static getMousePosition(e: PointerEvent): IVector {
         const box: DOMRect = (e.currentTarget as any).getBoundingClientRect();
-        return new Vector(
-            e.clientX - box.left,
-            e.clientY - box.top
-        );
+        return {
+            x: e.clientX - box.left,
+            y: e.clientY - box.top
+        };
     }
 
     public static getMouseButton(e: PointerEvent): MouseButton {

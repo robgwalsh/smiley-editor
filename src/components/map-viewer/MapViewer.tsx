@@ -1,11 +1,10 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useWheelZoom } from "../../hooks/useWheelZoom";
 import { EditorState } from "../../model/EditorState";
 import { MapData, getMapData } from "../../model/map/MapData";
-import { Vector } from "../../model/Vector";
-import { setMouseOnMap, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/editor-slice";
-import { StateUtils } from "../../utils/StateUtils";
+import { setMapMousePosition, setViewportSize, zoomAtMouse as zoomAtCursor } from "../../store/editor-slice";
+import { TilePalette } from "../TilePalette";
 import { MapEventHandler } from "./MapEventHandler";
 import { MapRenderer } from "./MapRenderer";
 
@@ -14,7 +13,7 @@ export function MapViewer() {
     const mapData: MapData = getMapData();
     const dispatch = useAppDispatch();
 
-    const [renderer, setRenderer] = useState<MapRenderer| null>(null);
+    const [renderer, setRenderer] = useState<MapRenderer | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -33,7 +32,10 @@ export function MapViewer() {
         const eventHandler = new MapEventHandler(containerRef.current, dispatch);
         setRenderer(new MapRenderer(canvasRef.current));
         const observer = new ResizeObserver((entries) => {
-            dispatch(setViewportSize(new Vector(entries[0].contentRect.width, entries[0].contentRect.height)));
+            dispatch(setViewportSize({
+                x: entries[0].contentRect.width,
+                y: entries[0].contentRect.height
+            }));
         });
         observer.observe(containerRef.current);
         return () => {
@@ -67,14 +69,27 @@ export function MapViewer() {
                 height: "100%"
             }}
             onContextMenu={handleContextMenu}
-            onMouseEnter={(e) => dispatch(setMouseOnMap(true))}
-            onMouseLeave={(e) => dispatch(setMouseOnMap(false))}
+            onMouseLeave={(e) => dispatch(setMapMousePosition(null))}
             ref={containerRef}
         >
             <canvas
                 style={{ position: "absolute", left: 0, top: 0 }}
                 ref={canvasRef}>
             </canvas>
+
+            <div
+                style={{
+                    position: "absolute",
+                    left: 0,
+                    bottom: 0,
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    paddingBottom: "20px"
+                }}
+            >
+                <TilePalette />
+            </div>
         </div>
     )
 }

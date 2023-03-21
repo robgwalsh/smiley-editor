@@ -31,7 +31,7 @@ export class MapRenderer {
         this.renderLayer(this._cx, state, mapData.layers.get(state.map.enemyLayer.name), LayerType.Enemy);
 
         // Draw the moused over cell
-        if (state.mouseOnMap) {
+        if (state.mapMousePosition) {
             const box = StateUtils.getMousedOverCellScreenBox(state);
 
             this._cx.strokeStyle = "red";
@@ -71,11 +71,13 @@ export class MapRenderer {
                         throw new MapError(`${layerType} layer ${tileX}, ${tileY} points to texture ${textureId} which doesn't exist`);
 
                     const texture: Texture = Textures.getTexture(state.map.header.textures[textureId].name);
-                    texture.drawTile(cx, tile,
-                        state.zoom * (tileX * tileWidth) - vp.x,
-                        state.zoom * (tileY * tileHeight) - vp.y,
-                        state.zoom
-                    );
+                    texture.drawSprite(cx, tile,
+                        {
+                            x: Math.round(state.zoom * (tileX * tileWidth) - vp.x),
+                            y: Math.round(state.zoom * (tileY * tileHeight) - vp.y),
+                            width: Math.round(state.zoom * tileWidth),
+                            height: Math.round(state.zoom * tileHeight)
+                        });
                 }
             }
         }
