@@ -51,12 +51,26 @@ export class StateUtils {
         ];
     }
 
-    public static setLayerValue(state: EditorState, layerName: string, x: number, y: number, v1: number, v2: number) {
+    /**
+     * Sets a value at a specified position within a specified layer. Returns whether the value actually changed.
+     */
+    public static setLayerValue(state: EditorState, layerName: string, x: number, y: number, v1: number, v2: number): boolean {
         const mapData = getMapData();
         const layerData = mapData.layers.get(layerName);
         const i = (y * state.map.header.width + x) * 2;
-        layerData[i] = v1;
-        layerData[i + 1] = v2;
+
+        let changed = false;
+        if (layerData[i] !== v1) {
+            layerData[i] = v1;
+            changed = true;
+        }
+
+        if (layerData[i + 1] !== v2) {
+            layerData[i + 1] = v2;
+            changed = true;
+        }
+
+        return changed;
     }
 
     public static getMousedOverCellScreenBox(state: EditorState): Box {

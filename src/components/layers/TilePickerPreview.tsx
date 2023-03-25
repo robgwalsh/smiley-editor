@@ -4,7 +4,7 @@ import { EditorState } from "../../model/EditorState";
 import { StateUtils } from "../../utils/StateUtils";
 import { Sprite } from "../Sprite";
 
-export function SpritePickerPreview() {
+export function TilePickerPreview() {
 
     const state: EditorState = useAppSelector(state => state.editor);
 
@@ -12,7 +12,7 @@ export function SpritePickerPreview() {
         return <></>
 
     return (
-        <div style={{ display: "flex", alignItems: "top", height: "128px" }}>
+        <div style={{ display: "flex", alignItems: "top", height: "128px", gap: "10px" }}>
             <Typography variant="body1" sx={{ wordWrap: "break-word" }}>
                 press a number key or mouse button to assign this tile to it!
             </Typography>

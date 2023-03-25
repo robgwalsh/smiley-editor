@@ -2,14 +2,27 @@ import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { EditorState, initialEditorState, TileSelection } from "../model/EditorState";
 import { IVector, Vector } from "../model/Vector";
 import { StateUtils } from "../utils/StateUtils";
-import { handleInputImpl } from "./actions/handleInput";
 import { loadMapAsync } from "./actions/loadMapAsync"
 
 export const editorSlice = createSlice({
     name: "editor",
     initialState: initialEditorState(),
     reducers: {
-        handleInput: handleInputImpl,
+        assignMapTile: (state: Draft<EditorState>, action: PayloadAction<string>) => {
+            const selection = state.tileSelections[action.payload];
+            if (selection) {
+                const cell = StateUtils.getMousedOverCell(state);
+                if (StateUtils.setLayerValue(
+                    state,
+                    selection.layerName ?? state.selectedLayerName,
+                    cell.x, cell.y,
+                    selection.textureId,
+                    selection.tile)
+                ) {
+                    state.revision++;
+                }
+            }
+        },
         setViewportSize: (state: Draft<EditorState>, action: PayloadAction<IVector>) => {
             state.viewport.width = action.payload.x;
             state.viewport.height = action.payload.y;
@@ -76,7 +89,8 @@ export const editorSlice = createSlice({
                     tile: StateUtils.getSpritePickerMousedOverSpriteIndex(state)
                 };
             }
-        }
+        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -100,7 +114,7 @@ export const editorSlice = createSlice({
 export const {
     setViewportSize, setActiveLayerName, setZoom, setMapMousePosition,
     zoomAtMouse, setIsMapLoading, setViewportOffset, pan, setSelectedTexture,
-    handleInput, setTilePickerTarget, assignTilePickerTarget
+    assignMapTile, setTilePickerTarget, assignTilePickerTarget
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

@@ -1,13 +1,14 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { useEffect } from 'react';
 import { Footer } from './components/Footer';
 import { EventLayerPicker } from './components/layers/EventLayerPicker';
-import { SpritePicker } from './components/layers/SpritePicker';
-import { SpritePickerPreview } from './components/layers/SpritePickerPreview';
+import { TilePicker } from './components/layers/TilePicker';
+import { TilePickerPreview } from './components/layers/TilePickerPreview';
 import { MapViewer } from './components/map-viewer/MapViewer';
 import { MainMenu } from './components/menu/MainMenu';
 import { Welcome } from './components/Welcome';
-import { useAppSelector } from './hooks';
-import { KeyboardShortcuts } from './KeyboardShortcuts';
+import { useAppDispatch, useAppSelector } from './hooks';
+import { KeyHandler } from './KeyHandler';
 
 const darkTheme = createTheme({
     palette: {
@@ -19,11 +20,10 @@ const padding = "20px";
 
 function App() {
     const state = useAppSelector(state => state.editor);
-
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <KeyboardShortcuts />
+            <KeyHandler />
             <div style={{
                 width: "100vw",
                 height: "100vh",
@@ -47,24 +47,20 @@ function App() {
                     margin: `0 ${padding} 0 ${padding}`
                 }}>
                     <div style={{
-                            flex: 1,
-                            height: "100%",
-                            backgroundColor: "#191919",
-                            overflow: "hidden",
-                            borderRadius: "6px",
-                            border: "1px solid #232323"
-                        }}
+                        flex: 1,
+                        height: "100%",
+                        backgroundColor: "#191919",
+                        overflow: "hidden",
+                        borderRadius: "6px",
+                        border: "1px solid #232323"
+                    }}
                     >
                         {state.map ? <MapViewer /> : <Welcome />}
                     </div>
 
-                    <div style={{ flex: 0, marginLeft: padding, width: "500px" }}>
-                        {
-                            state.selectedLayerName === "Event"
-                                ? <EventLayerPicker />
-                                : <SpritePicker />
-                        }
-                        {/* <SpritePickerPreview /> */}
+                    <div style={{ flex: 0, display: "flex", flexDirection: "column", marginLeft: padding, width: "500px", height: "100%" }}>
+                        {state.selectedLayerName === "Event" ? <EventLayerPicker /> : <TilePicker />}
+                        <TilePickerPreview />
                     </div>
                 </div>
 

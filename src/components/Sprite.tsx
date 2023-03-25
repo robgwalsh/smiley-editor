@@ -17,5 +17,9 @@ export function Sprite(props: Props) {
             texture.drawSprite(cx, props.spriteIndex, { x: 0, y: 0, width: props.width, height: props.height });
         }
     });
-    return <canvas ref={canvasRef} width={64} height={64} />
+    return (
+        <div style={{ width: `${props.width}px`, height: `${props.height}px` }}>
+            <canvas ref={canvasRef} width={props.width} height={props.height} />
+        </div>
+    );
 }

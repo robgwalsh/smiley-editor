@@ -1,8 +1,4 @@
-import Button from "@mui/material/Button";
-import React, { useEffect, useLayoutEffect, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { Textures } from "../model/Textures";
-import { handleInput } from "../store/editor-slice";
+import { useAppSelector } from "../hooks";
 import { Sprite } from "./Sprite";
 
 interface Props {

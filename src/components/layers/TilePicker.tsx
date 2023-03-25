@@ -12,7 +12,7 @@ import { HtmlUtils, MouseButton } from "../../utils/HtmlUtils";
 /**
  * UI for selecting tiles from a texture for placing on the active map layer.
  */
-export function SpritePicker() {
+export function TilePicker() {
 
     const width = 500;
 
@@ -74,11 +74,15 @@ export function SpritePicker() {
                 dispatch(assignTilePickerTarget("rmb"));
                 return;
         }
-
     };
 
+    const handleContextMenu = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     return (
-        <div>
+        <div style={{ height: `${width + 50}px` }}>
             <div style={{ display: "flex" }}>
                 <div style={{ flex: 1 }} />
                 <div style={{ flex: 0, display: "flex", alignItems: "center", gap: "10px" }}>
@@ -99,9 +103,11 @@ export function SpritePicker() {
                 onPointerMove={handlePointerMove}
                 onPointerLeave={handlePointerLeave}
                 onPointerDown={handlePointerDown}
+                onContextMenu={handleContextMenu}
             >
                 <img
-                    width={500}
+                    width={width}
+                    height={width}
                     style={{ objectFit: "contain", position: "absolute", left: 0, top: 0 }}
                     src={selectedTexture.tilesetPaths[state.selectedTextureIndex]}
                 />
